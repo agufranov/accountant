@@ -25,5 +25,11 @@ angular.module 'app', ['ionic', 'ngCordova']
             'menu-content':
               templateUrl: 'templates/main.html'
 
+        .state 'app.add',
+          url: '/add'
+          views:
+            'menu-content':
+              templateUrl: 'templates/add.html'
+
       $urlRouterProvider.otherwise '/app/main'
   ]
