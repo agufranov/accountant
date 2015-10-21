@@ -7,3 +7,5 @@ plugins/
 .browserify/
 www/
 public/lib/
+public/css/ionic.app.css
+public/css/ionic.app.min.css

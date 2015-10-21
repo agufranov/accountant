@@ -9,7 +9,12 @@
   npm install
   bower install
   ```
-3. To run in browser (will start development server with watch, compile & livereload):
+3. Build Ionic SASS:
+  ```
+  gulp ionic-sass
+  ```
+
+4. To run in browser (will start development server with watch, compile & livereload):
   ```
   gulp serve
   ```
