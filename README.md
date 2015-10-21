@@ -26,6 +26,10 @@
   ```
   gulp serve
   ```
+  then restore Ionic platforms & plugins listed in package.json:
+  ```
+  ionic state reset
+  ```
   and then run it with Ionic CLI (for details, see [Ionic docs](http://ionicframework.com/docs/cli/run.html)).
   For example, running on Android device:
   ```
