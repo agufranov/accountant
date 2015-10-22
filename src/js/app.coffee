@@ -1,4 +1,6 @@
-angular.module 'app', ['ionic', 'ngCordova']
+require './controllers'
+
+angular.module 'app', ['app.controllers', 'ionic', 'ngCordova']
 
   .run [
     '$ionicPlatform'
@@ -30,6 +32,7 @@ angular.module 'app', ['ionic', 'ngCordova']
           views:
             'menu-content':
               templateUrl: 'templates/add.html'
+              controller: 'addCtrl'
 
-      $urlRouterProvider.otherwise '/app/main'
+      $urlRouterProvider.otherwise '/app/add'
   ]

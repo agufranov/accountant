@@ -1,3 +1,8 @@
 ion-view
   ion-content.padding
-    h1 Add
+    .card.list
+      ion-radio(ng-repeat='wallet in wallets' ng-model='$parent.y' ng-value='wallet.id') {{wallet.name}}
+    form(ng-submit='onSubmit()')
+      .list
+        label.item.item-input
+          input(type='number' placeholder='sum')
