@@ -22,6 +22,7 @@ angular.module 'app'
               else addNum(val)
 
           backspace = ->
+            $scope.point = false if $scope.value[-1..] is '.'
             $scope.value = $scope.value[...$scope.value.length - 1]
 
           point = ->
@@ -31,5 +32,6 @@ angular.module 'app'
 
           addNum = (num) ->
             $scope.value += num
+            $scope.value = $scope.value.replace /^0+/, ''
       ]
   ]
