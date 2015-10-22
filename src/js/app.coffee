@@ -36,3 +36,5 @@ angular.module 'app', ['app.controllers', 'ionic', 'ngCordova']
 
       $urlRouterProvider.otherwise '/app/add'
   ]
+
+require '../directives'

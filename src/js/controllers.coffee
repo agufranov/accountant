@@ -10,4 +10,6 @@ angular.module 'app.controllers', []
 
       $scope.onSubmit = ->
         console.log 'submit'
+
+      $scope.x = 5
   ]
