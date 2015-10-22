@@ -13,7 +13,6 @@ angular.module 'app.controllers', []
         console.log 'submit'
 
       Db.ready().then ->
-        console.log 'then', arguments
-        console.log 'getting'
-        Db.get()
+        console.log 'preparing'
+        Db.prepare()
   ]
