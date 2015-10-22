@@ -1,6 +1,7 @@
 require './controllers'
+require './services'
 
-angular.module 'app', ['app.controllers', 'ionic', 'ngCordova']
+angular.module 'app', ['app.controllers', 'app.services', 'ionic', 'ngCordova']
 
   .run [
     '$ionicPlatform'
