@@ -17,8 +17,15 @@ angular.module 'app.controllers', []
 
       Db.connect()
         .then ->
-          Db.execute 'SELECT * FROM sqlite_master'
-        .then Db.logRows
+          Db.dropTable 'a', true
+        .then ->
+          Db.createTable 'a', true
+        .then ->
+          Db.insert 'a', id: 1
+        .then ->
+          Db.select 'a'
+        .then (rows) ->
+          console.log JSON.stringify rows
 
       # orm = new Orm
       #   users:

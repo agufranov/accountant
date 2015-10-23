@@ -1,18 +1,64 @@
-class Db
-  constructor: (@dbName, @$cordovaSQLite, @$ionicPlatform) ->
+DbBase = require './dbBase'
 
-  connect: ->
-    @$ionicPlatform.ready =>
-      @db = @$cordovaSQLite.openDB @dbName
+class Db extends DbBase
+  constructor: (dbName, $cordovaSQLite, $ionicPlatform) ->
+    super dbName, $cordovaSQLite, $ionicPlatform
 
-  execute: (query, params) ->
-    @$cordovaSQLite.execute @db, query, params
+  createTable: (name, ifNotExists = false) ->
+    query = "CREATE TABLE"
+    query += " IF NOT EXISTS" if ifNotExists is true
+    query += " #{name} (id integer primary key)"
+    @execute query
+      .then(
+        (res) ->
+          console.log "Success: CREATE TABLE #{name}", JSON.stringify res
+        ,
+        (err) ->
+          console.log "ERROR: CREATE TABLE #{name}"
+      )
 
-  log: ->
-    console.log JSON.stringify arguments
+  dropTable: (name, ifExists = false) ->
+    query = "DROP TABLE"
+    query += " IF EXISTS" if ifExists is true
+    query += " #{name}"
+    @execute query
+      .then(
+        (res) ->
+          console.log "Success: DROP TABLE #{name}", JSON.stringify res
 
-  logRows: (res) ->
-    console.log "Result: #{res.rows.length} rows"
-    console.log res.rows.item(i) for i in [0...res.rows.length]
+        ,
+        (err) ->
+          console.log "ERROR: DROP TABLE #{name}"
+      )
+
+  select: (tableName, cols = '*') ->
+    colsStr = if _.isArray cols then cols.join ', ' else cols
+    query = "SELECT #{cols} FROM #{tableName}"
+    @execute query
+      .then(
+        (res) ->
+          console.log "Success: got #{res.rows.length} from <#{query}>"
+          console.log JSON.stringify res
+          (res.rows.item i for i in [0...res.rows.length])
+        ,
+        (err) ->
+          console.log "ERROR: <#{query}>"
+      )
+
+  insert: (tableName, o) ->
+    colsStr = _.keys(o).join ', '
+    qs = ('?' for i in [0..._.size o]).join ', '
+    query = "INSERT INTO #{tableName} (#{colsStr}) VALUES (#{qs})"
+    console.log query
+    @execute query, _.values o
+      .then(
+        (res) ->
+          console.log "Success: inserted #{res.rowsAffected} rows <#{query}>"
+          console.log JSON.stringify res
+          res
+        ,
+        (err) ->
+          console.log "ERROR: <#{query}>"
+      )
 
 module.exports = Db
