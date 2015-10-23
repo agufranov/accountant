@@ -21,9 +21,9 @@ angular.module 'app.controllers', []
         .then ->
           Db.createTable 'a', true
         .then ->
-          Db.insert 'a', id: 1
+          Db.insertMultiple 'a', [ { id: 1 }, { id: 2 }, { id: 3 } ]
         .then ->
-          Db.select 'a', where: { age: { gte: 6 }, pair: { null: false } }
+          Db.select 'a', where: { 7: { gte: 6 }, 2: { null: false } }
         .then (rows) ->
           console.log JSON.stringify rows
 

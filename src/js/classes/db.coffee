@@ -81,4 +81,7 @@ class Db extends DbBase
           console.log "ERROR: <#{query}>"
       )
 
+  insertMultiple: (tableName, os) ->
+    (@insert tableName, o for o in os)
+
 module.exports = Db
