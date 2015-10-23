@@ -1,31 +1,29 @@
-Orm = require './orm'
-
 angular.module 'app.controllers', []
 
   .controller 'addCtrl', [
     '$scope'
     '$q'
-    'Db'
-    ($scope, $q, Db) ->
+    'Orm'
+    ($scope, $q, Orm) ->
       $scope.wallets = [
         { id: 1, name: 'Карта', icon: 'ion-card', balance: '36 000' }
         { id: 2, name: 'Кошелек', icon: 'ion-cash', balance: '5 000' }
       ]
 
-      $scope.onSubmit = ->
-        console.log 'submit'
-
-      Db.connect()
-        .then ->
-          Db.dropTable 'a', true
-        .then ->
-          Db.createTable 'a', true
-        .then ->
-          Db.insertMultiple 'a', [ { id: 1 }, { id: 2 }, { id: 3 } ]
-        .then ->
-          Db.select 'a', where: { 7: { gte: 6 }, 2: { null: false } }
-        .then (rows) ->
-          console.log JSON.stringify rows
+      # $scope.onSubmit = ->
+      #   console.log 'submit'
+      #
+      # Db.connect()
+      #   .then ->
+      #     Db.dropTable 'a', true
+      #   .then ->
+      #     Db.createTable 'a', true
+      #   .then ->
+      #     Db.insertMultiple 'a', [ { id: 1 }, { id: 2 }, { id: 3 } ]
+      #   .then ->
+      #     Db.select 'a', where: { 7: { gte: 6 }, 2: { null: false } }
+      #   .then (rows) ->
+      #     console.log JSON.stringify rows
 
       # orm = new Orm
       #   users:

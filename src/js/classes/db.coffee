@@ -69,7 +69,6 @@ class Db extends DbBase
     colsStr = _.keys(o).join ', '
     qs = ('?' for i in [0..._.size o]).join ', '
     query = "INSERT INTO #{tableName} (#{colsStr}) VALUES (#{qs})"
-    console.log query
     @execute query, _.values o
       .then(
         (res) ->
