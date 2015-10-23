@@ -1,11 +1,22 @@
 DbBase = require './dbBase'
 
 class QueryHelper
+  @conditionToString: (condition) ->
+    return "= #{condition}" if _.isString condition
+    return 'IS NULL' if condition.null is true
+    return 'IS NOT NULL' if condition.null is false
+    return "> #{condition.gt}" if condition.gt?
+    return "< #{condition.lt}" if condition.lt?
+    return ">= #{condition.gte}" if condition.gte?
+    return "<= #{condition.lte}" if condition.lte?
+    return "!= #{condition.neq}" if condition.neq?
+      
+
   @whereToString: (where) ->
     'WHERE ' +
     _.pairs where
       .map ([colName, condition]) ->
-        "#{colName} = #{condition}"
+        "#{colName} #{QueryHelper.conditionToString condition}"
       .join ' AND '
 
 class Db extends DbBase

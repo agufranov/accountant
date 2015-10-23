@@ -23,7 +23,7 @@ angular.module 'app.controllers', []
         .then ->
           Db.insert 'a', id: 1
         .then ->
-          Db.select 'a', where: { '1': 1 }
+          Db.select 'a', where: { age: { gte: 6 }, pair: { null: false } }
         .then (rows) ->
           console.log JSON.stringify rows
 
