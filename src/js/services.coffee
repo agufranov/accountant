@@ -27,7 +27,6 @@ angular.module 'app.services', []
           questions = ('?' for key of o).join ', '
           values = (value for key, value of o)
           query = "INSERT INTO #{table} (#{columns}) VALUES (#{questions})"
-          console.log query, values
           $cordovaSQLite.execute db, query, values
 
         select: (table, columns = '*', subquery = '') ->
@@ -38,37 +37,89 @@ angular.module 'app.services', []
           selectQ.promise
 
         prepare: ->
-          query = 'CREATE TABLE types(
+          flowsCreateQuery = 'CREATE TABLE flows(
+            id INTEGER PRIMARY KEY,
+            sum INTEGER NOT NULL,
+            type_id INTEGER,
+            source_id INTEGER NOT NULL,
+            destination_id INTEGER,
+            date INTEGER NOT NULL,
+            FOREIGN KEY (type_id) REFERENCES types(id),
+            FOREIGN KEY (source_id) REFERENCES wallets(id),
+            FOREIGN KEY (destination_id) REFERENCES wallets(id)
+          )'
+
+          typesCreateQuery = 'CREATE TABLE types(
             id INTEGER PRIMARY KEY,
             name TEXT NOT NULL,
             parent_id INTEGER,
             FOREIGN KEY (parent_id) REFERENCES types(id)
           )'
-          types = [
-            { id: 1, name: 'Food' }
-            { id: 2, name: 'Electronics' }
-            { id: 3, name: 'Arduino', parent_id: 2 }
-          ]
 
-          p = v.dropIfExists 'types'
-            .catch v.errCb 'drop'
+          walletsCreateQuery = 'CREATE TABLE wallets(
+            id INTEGER PRIMARY KEY,
+            name TEXT NOT NULL,
+            type INTEGER NOT NULL,
+            balance INTEGER NOT NULL
+          )'
+
+          # recreate tables
+          v.dropIfExists 'flows'
+            .catch v.errCb 'drop flows'
             .then ->
-              $cordovaSQLite.execute db, query
-            .catch v.errCb 'create'
-
-          for type in types
-            p = p
-              .then (
-                ((_type) ->
-                  ->
-                    v.insert 'types', _type
-                )(type)
-              )
-              .catch v.errCb "insert #{type.id}"
-
-          p
+              console.log 'Flows dropped'
+              v.dropIfExists 'types'
+            .catch v.errCb 'drop types'
             .then ->
-              v.select 'types'
-            .then (res) ->
-              console.log 'final select', JSON.stringify res
+              console.log 'Types dropped'
+              v.dropIfExists 'wallets'
+            .catch v.errCb 'drop wallets'
+            .then ->
+              console.log 'Wallets dropped'
+              $cordovaSQLite.execute db, typesCreateQuery
+            .catch v.errCb 'create types'
+            .then ->
+              console.log 'Types created'
+              $cordovaSQLite.execute db, walletsCreateQuery
+            .catch v.errCb 'create wallets'
+            .then ->
+              console.log 'Wallets created'
+              $cordovaSQLite.execute db, flowsCreateQuery
+            .catch v.errCb 'create flows'
+            .then ->
+              console.log 'Flows created'
+
+              seed = (table, data) ->
+                $q.all(
+                  data.map (record) ->
+                    v.insert table, record
+                )
+                  .catch v.errCb "insert #{table}"
+                  .then ->
+                    console.log "#{table} seeded"
+                    v.select table
+                  .then (res) ->
+                    console.log "#{table} data:", JSON.stringify res
+
+              # seed types
+              types = [
+                { id: 1, name: 'Food' }
+                { id: 2, name: 'Electronics' }
+                { id: 3, name: 'Arduino', parent_id: 2 }
+              ]
+
+              # seed wallets
+              wallets = [
+                { id: 1, name: 'Card', type: 0, balance: 0 }
+                { id: 2, name: 'Cash', type: 1, balance: 0 }
+              ]
+
+              # seed flows
+              flows = [
+                { id: 1, sum: 50000, type_id: 1, source_id: 1, date: Date.now() }
+              ]
+
+              seed 'types', types
+              seed 'wallets', wallets
+              seed 'flows', flows
   ]
