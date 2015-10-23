@@ -36,6 +36,9 @@ angular.module 'app.services', []
               selectQ.resolve (res.rows.item(i) for i in [0...res.rows.length])
           selectQ.promise
 
+        execute: (query, params) ->
+          $cordovaSQLite.execute db, query, params
+
         prepare: ->
           flowsCreateQuery = 'CREATE TABLE flows(
             id INTEGER PRIMARY KEY,

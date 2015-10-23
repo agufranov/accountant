@@ -37,3 +37,9 @@ angular.module 'app', ['app.controllers', 'app.services', 'ionic', 'ngCordova']
 
       $urlRouterProvider.otherwise '/app/add'
   ]
+
+  .config [
+    'DbProvider'
+    (DbProvider) ->
+      DbProvider.setDbName 'accountant'
+  ]
