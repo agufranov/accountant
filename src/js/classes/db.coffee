@@ -1,5 +1,13 @@
 DbBase = require './dbBase'
 
+class QueryHelper
+  @whereToString: (where) ->
+    'WHERE ' +
+    _.pairs where
+      .map ([colName, condition]) ->
+        "#{colName} = #{condition}"
+      .join ' AND '
+
 class Db extends DbBase
   constructor: (dbName, $cordovaSQLite, $ionicPlatform) ->
     super dbName, $cordovaSQLite, $ionicPlatform
@@ -31,9 +39,10 @@ class Db extends DbBase
           console.log "ERROR: DROP TABLE #{name}"
       )
 
-  select: (tableName, cols = '*') ->
+  select: (tableName, options = {}, cols = '*') ->
     colsStr = if _.isArray cols then cols.join ', ' else cols
     query = "SELECT #{cols} FROM #{tableName}"
+    query += ' ' + QueryHelper.whereToString options.where if options.where?
     @execute query
       .then(
         (res) ->
