@@ -1,6 +1,10 @@
 DbBase = require './dbBase'
 
 class QueryHelper
+  constructor: ->
+    super arguments...
+    @verbose = true
+
   @conditionToString: (condition) ->
     return "= #{condition}" if _.isString condition
     return 'IS NULL' if condition.null is true
@@ -27,10 +31,10 @@ class Db extends DbBase
     @execute query
       .then(
         (res) ->
-          console.log "Success: CREATE TABLE #{name}", JSON.stringify res
+          console.log "Success: CREATE TABLE #{name}", JSON.stringify res if @verbose
         ,
         (err) ->
-          console.log "ERROR: CREATE TABLE #{name}"
+          console.log "ERROR: CREATE TABLE #{name}" if @verbose
       )
 
   dropTable: (name, ifExists = false) ->
@@ -40,11 +44,11 @@ class Db extends DbBase
     @execute query
       .then(
         (res) ->
-          console.log "Success: DROP TABLE #{name}", JSON.stringify res
+          console.log "Success: DROP TABLE #{name}", JSON.stringify res if @verbose
 
         ,
         (err) ->
-          console.log "ERROR: DROP TABLE #{name}"
+          console.log "ERROR: DROP TABLE #{name}" if @verbose
       )
 
   select: (tableName, options = {}, cols = '*') ->
@@ -55,12 +59,12 @@ class Db extends DbBase
     @execute query
       .then(
         (res) ->
-          console.log "Success: got #{res.rows.length} from <#{query}>"
-          console.log JSON.stringify res
+          console.log "Success: got #{res.rows.length} from <#{query}>" if @verbose
+          console.log JSON.stringify res if @verbose
           (res.rows.item i for i in [0...res.rows.length])
         ,
         (err) ->
-          console.log "ERROR: <#{query}>"
+          console.log "ERROR: <#{query}>" if @verbose
       )
 
   insert: (tableName, o) ->
@@ -70,12 +74,12 @@ class Db extends DbBase
     @execute query, _.values o
       .then(
         (res) ->
-          console.log "Success: inserted #{res.rowsAffected} rows <#{query}>"
-          console.log JSON.stringify res
+          console.log "Success: inserted #{res.rowsAffected} rows <#{query}>" if @verbose
+          console.log JSON.stringify res if @verbose
           res
         ,
         (err) ->
-          console.log "ERROR: <#{query}>"
+          console.log "ERROR: <#{query}>" if @verbose
       )
 
   insertMultiple: (tableName, os) ->

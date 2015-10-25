@@ -13,6 +13,8 @@ angular.module 'app.services'
         '$cordovaSQLite'
         '$ionicPlatform'
         ($cordovaSQLite, $ionicPlatform) ->
-          new DbWithSchema dbName, $cordovaSQLite, $ionicPlatform, schema
+          db = new DbWithSchema dbName, $cordovaSQLite, $ionicPlatform, schema
+          db.verbose = false
+          db
       ]
   ]

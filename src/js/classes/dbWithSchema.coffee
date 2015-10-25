@@ -55,7 +55,7 @@ class Table
       defStr += " DEFAULT #{colDef.default}" if colDef.default
       defStrs.push defStr
     result = defStrs.concat fkStrs
-    console.log result
+    console.log result if @verbose
     result
 
   createTable: (ifNotExists) ->
