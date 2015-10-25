@@ -12,12 +12,20 @@ angular.module 'app.controllers', []
 
       Db.connect()
         .then ->
+          Db.execute 'PRAGMA foreign_keys'
+        .then (res) ->
+          console.log JSON.stringify res.rows.item(0)
+        .then ->
           Db.resetTables()
         .then ->
           Db.seed
+            wallets: [
+              { id: 1, name: 'Наличные', type: 'cash', balance: 0 }
+              { id: 2, name: 'Карта', type: 'card', balance: 0 }
+            ]
+          Db.seed
             flows: [
-              { name: 'a' }
-              { name: 'b' }
+              { sum: 2, source_id: 2 }
             ]
         .then ->
           Db.flows.select()

@@ -45,8 +45,16 @@ angular.module 'app', ['app.controllers', 'app.services', 'ionic', 'ngCordova']
         flows:
           primaryKey: 'id'
           columns:
-            id: type: 'integer'
-            name: type: 'text', null: false
+            id: type: 'INTEGER'
+            sum: type: 'INTEGER', null: false, check: "TYPEOF(sum) = 'integer' AND sum > 0"
+            source_id: type: 'reference', table: 'wallets', null: false
+        wallets:
+          primaryKey: 'id'
+          columns:
+            id: type: 'INTEGER'
+            name: type: 'TEXT', null: false
+            type: type: 'TEXT', null: false
+            balance: type: 'INTEGER', null: false
 
       DbProvider.setDbName 'accountant'
       DbProvider.setSchema schema

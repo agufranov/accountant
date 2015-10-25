@@ -4,6 +4,7 @@ class DbBase
   connect: ->
     @$ionicPlatform.ready =>
       @db = @$cordovaSQLite.openDB @dbName
+      @db.executeSql 'PRAGMA foreign_keys = ON'
 
   execute: (query, params) ->
     @$cordovaSQLite.execute @db, query, params
