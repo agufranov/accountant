@@ -1,33 +1,32 @@
-angular.module 'app.controllers', []
+angular.module 'app.controllers', ['angularMoment']
+  .controller 'mainCtrl', [
+    '$scope'
+    'Db'
+    ($scope, Db) ->
+      f = (flow) ->
+        flow.date = flow.date * 1000
+        flow.sum = (flow.sum / 100).toFixed 2
+        flow.type = _.find $scope.types, id: flow.type_id
+        flow.wallet = _.find $scope.wallets, id: flow.source_id
+        flow
+
+      Db.connect()
+        .then -> Db.wallets.select()
+        .then (wallets) -> $scope.wallets = wallets
+
+        .then -> Db.types.select()
+        .then (types) -> $scope.types = types
+
+        .then ->
+          Db.flows.select
+            where:
+              date:
+                gt: moment().subtract(3, 'hours').unix()
+        .then (flows) ->
+          $scope.flows = flows.map f
+  ]
 
   .controller 'addCtrl', [
     '$scope'
-    '$q'
-    'Db'
-    ($scope, $q, Db) ->
-      $scope.wallets = [
-        { id: 1, name: 'Карта', icon: 'ion-card', balance: '36 000' }
-        { id: 2, name: 'Кошелек', icon: 'ion-cash', balance: '5 000' }
-      ]
-
-      Db.connect()
-        .then ->
-          Db.execute 'PRAGMA foreign_keys'
-        .then (res) ->
-          console.log JSON.stringify res.rows.item(0)
-        .then ->
-          Db.resetTables()
-        .then ->
-          Db.seed
-            wallets: [
-              { id: 1, name: 'Наличные', type: 'cash', balance: 0 }
-              { id: 2, name: 'Карта', type: 'card', balance: 0 }
-            ]
-          Db.seed
-            flows: [
-              { sum: 2, source_id: 2 }
-            ]
-        .then ->
-          Db.flows.select()
-        .then Db.log
+    ($scope) ->
   ]

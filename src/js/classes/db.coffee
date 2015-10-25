@@ -51,6 +51,7 @@ class Db extends DbBase
     colsStr = if _.isArray cols then cols.join ', ' else cols
     query = "SELECT #{cols} FROM #{tableName}"
     query += ' ' + QueryHelper.whereToString options.where if options.where?
+    query += " LIMIT #{options.limit}" if options.limit?
     @execute query
       .then(
         (res) ->

@@ -2,3 +2,9 @@ ion-view
   ion-content.padding
     h1 Main
     button.button.button-full.button-balanced(ui-sref='app.add') Add
+    ion-list
+      ion-item(ng-repeat="flow in flows | orderBy:'-':date")
+        {{flow.sum}}
+        {{flow.type.name}}
+        {{flow.wallet.name}}
+        span.item-note(am-time-ago='flow.date')
