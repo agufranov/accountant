@@ -3,8 +3,22 @@ Db = require './db'
 class DbWithSchema extends Db
   constructor: (dbName, $cordovaSQLite, $ionicPlatform, @schema) ->
     super dbName, $cordovaSQLite, $ionicPlatform
+    @tables = {}
     for tableName of @schema
-      @[tableName] = new Table @, tableName
+      @[tableName] = @tables[tableName] = new Table @, tableName
+
+  createTables: (ifNotExists = false) ->
+    for tableName, table of @tables
+      table.createTable ifNotExists
+
+  resetTables: ->
+    for tableName, table of @tables
+      table.dropTable true
+      table.createTable()
+
+  seed: (data) ->
+    for tableName, records of data
+      table.insertMultiple records if (table = @tables[tableName])
 
 class Table
   constructor: (@db, @name) ->

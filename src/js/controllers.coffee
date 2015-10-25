@@ -10,18 +10,16 @@ angular.module 'app.controllers', []
         { id: 2, name: 'Кошелек', icon: 'ion-cash', balance: '5 000' }
       ]
 
-      flows = Db.flows
       Db.connect()
         .then ->
-          flows.dropTable true
+          Db.resetTables()
         .then ->
-          flows.createTable()
+          Db.seed
+            flows: [
+              { name: 'a' }
+              { name: 'b' }
+            ]
         .then ->
-          flows.insertMultiple [
-            { name: 'a' }
-            { name: 'b' }
-          ]
-        .then ->
-          flows.select()
+          Db.flows.select()
         .then Db.log
   ]
