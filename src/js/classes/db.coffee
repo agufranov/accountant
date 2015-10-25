@@ -20,13 +20,10 @@ class QueryHelper
       .join ' AND '
 
 class Db extends DbBase
-  constructor: (dbName, $cordovaSQLite, $ionicPlatform) ->
-    super dbName, $cordovaSQLite, $ionicPlatform
-
-  createTable: (name, ifNotExists = false) ->
+  createTable: (name, defs, ifNotExists = false) ->
     query = "CREATE TABLE"
     query += " IF NOT EXISTS" if ifNotExists is true
-    query += " #{name} (id integer primary key)"
+    query += " #{name} (#{defs.join ', '})"
     @execute query
       .then(
         (res) ->

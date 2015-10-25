@@ -41,24 +41,13 @@ angular.module 'app', ['app.controllers', 'app.services', 'ionic', 'ngCordova']
   .config [
     'DbProvider'
     (DbProvider) ->
-      DbProvider.setDbName 'accountant'
-  ]
-
-  .config [
-    'OrmProvider'
-    (OrmProvider) ->
       schema =
-        users:
+        flows:
           primaryKey: 'id'
           columns:
             id: type: 'integer'
             name: type: 'text', null: false
-        posts:
-          primaryKey: 'id'
-          columns:
-            id: type: 'integer'
-            body: type: 'text', null: false
-            user_id: type: 'reference', table: 'users'
 
-      OrmProvider.setSchema schema
+      DbProvider.setDbName 'accountant'
+      DbProvider.setSchema schema
   ]
