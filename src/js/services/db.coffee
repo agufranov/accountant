@@ -18,7 +18,7 @@ angular.module 'app.services'
           db = new DbWithSchema $cordovaSQLite, $ionicPlatform, $q, QueryBuilder, {
             dbName: dbName
             schema: schema
-            verbose: false
+            logLevel: 'debug'
           }
       ]
   ]
