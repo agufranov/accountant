@@ -4,18 +4,17 @@ angular.module 'app.services'
 
   .provider 'Db', [
     ->
-      dbName = null
-      schema = null
+      options:
+        dbName: null
+        schema: null
+        logLevel: 'debug'
 
-      setDbName: (value) -> dbName = value
-      setSchema: (value) -> schema = value
       $get: [
         '$cordovaSQLite'
         '$ionicPlatform'
         '$q'
-        ($cordovaSQLite, $ionicPlatform, $q) ->
-          db = new DbWithSchema dbName, $cordovaSQLite, $ionicPlatform, $q, schema
-          db.verbose = false
-          db
+        'QueryBuilder'
+        ($cordovaSQLite, $ionicPlatform, $q, QueryBuilder) ->
+          db = new DbWithSchema $cordovaSQLite, $ionicPlatform, $q, QueryBuilder, @options
       ]
   ]
