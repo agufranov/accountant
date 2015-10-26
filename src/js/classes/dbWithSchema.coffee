@@ -1,10 +1,10 @@
 Db = require './db'
 
 class DbWithSchema extends Db
-  constructor: (dbName, $cordovaSQLite, $ionicPlatform, $q, @schema) ->
-    super dbName, $cordovaSQLite, $ionicPlatform, $q
+  constructor: ($cordovaSQLite, $ionicPlatform, $q, queryBuilder, options) ->
+    super arguments...
     @tables = {}
-    for tableName of @schema
+    for tableName of @options.schema
       @[tableName] = @tables[tableName] = new Table @, tableName
 
   createTables: (ifNotExists = false) ->
@@ -24,7 +24,7 @@ class DbWithSchema extends Db
 
 class Table
   constructor: (@db, @name) ->
-    @def = @db.schema[@name]
+    @def = @db.options.schema[@name]
 
     for operation in [
       'dropTable'
@@ -45,7 +45,7 @@ class Table
         colType = colDef.type
       else
         refTableName = colDef.table
-        refTableDef = @db.schema[refTableName]
+        refTableDef = @db.options.schema[refTableName]
         refPk = refTableDef.primaryKey
         colType = refTableDef.columns[refPk].type
         fkStrs.push "FOREIGN KEY(#{colName}) REFERENCES #{refTableName}(#{refPk})"
@@ -57,7 +57,7 @@ class Table
       defStr += " DEFAULT #{colDef.default}" if colDef.default
       defStrs.push defStr
     result = defStrs.concat fkStrs
-    console.log result if @verbose
+    console.log result if @verbose #!!!!!!! TODO
     result
 
   createTable: (ifNotExists) ->

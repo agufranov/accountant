@@ -16,62 +16,75 @@ angular.module 'app', ['app.controllers', 'app.services', 'ionic', 'ngCordova']
       moment.locale 'ru'
 
       Db.connect()
-        .then ->
-          Db.execute 'PRAGMA foreign_keys'
-        .then (res) ->
-          console.log JSON.stringify res.rows.item(0)
-        .then ->
-          Db.resetTables()
-        .then ->
-          Db.seed
-            wallets: [
-              { id: 1, name: 'Наличные', type: 'cash', balance: 0 }
-              { id: 2, name: 'Карта', type: 'card', balance: 0 }
-            ]
-            types: [
-              { id: 0, name: '<N/A>' }
-              { id: 1, name: 'Кафе' }
-              { id: 2, name: 'Рестораны' }
-              { id: 3, name: 'Техника' }
-              { id: 4, name: 'Arduino', parent_id: 3 }
-              { id: 5, name: 'Одежда' }
-            ]
-            sms_matchers: [
-              {
-                number: 900
-                matchFn: '(' + ((message) ->
-                  matches = message.body.match /^(\w+) (\d{2}\.\d{2}\.\d{2} \d{2}:\d{2}) ([^\d]+) ([\d\.]+)р (.*) Баланс: ([\d\.]+)р$/
-                  if matches
-                    [all, card, dateRaw, operationRaw, sumRaw, place, balanceRaw] = matches
-                    return {
-                      card
-                      date: moment(dateRaw, 'DD.MM.YYYY HH:mm:ss')
-                      operation: { 'покупка': 'payment', 'выдача наличных': 'cashOut', 'зачисление': 'cashIn' }[operationRaw]
-                      sum: Math.round sumRaw * 100
-                      place
-                      balance: Math.round balanceRaw * 100
-                    }
-                  else
-                    null
-                ).toString() + ')'
-              }
-            ]
-            sms: [
-            ]
-        .then ->
-          Db.seed
-            flows: [
-              { sum: 25000, source_id: 1, type_id: 1, date: moment().subtract('1', 'day').startOf('day').add('14', 'hours').unix() }
-              { sum: 72000, source_id: 2, type_id: 4, date: moment().subtract('1', 'day').startOf('day').add('15', 'hours').unix() }
-              { sum: 1200000, source_id: 2, type_id: 5, date: moment().subtract('1', 'day').startOf('day').add('21', 'hours').unix() }
-              { sum: 32000, source_id: 1, type_id: 1, date: moment().subtract('2', 'hours').unix() }
-              { sum: 47000, source_id: 2, type_id: 1, date: moment().subtract('1', 'hours').unix() }
-            ]
-        .then ->
-          console.log 'Seed!'
-          SMSParser.getMessagesFromNumber 900
-            .then ->
-              console.log JSON.stringify arguments
+        # .then -> Db.execute 'PRAGMA foreign_keys'
+        # .then (res) ->
+        #   console.log JSON.stringify res.rows.item(0)
+        .then -> Db.dropTable 'test', ifExists: true
+        .then -> Db.createTable 'test', defs: [ 'id integer primary key', 'data text' ]
+        .then -> Db.insert 'test', { data: 'waer' }
+        .then -> Db.select 'test', { columns: ['id', 'data'], where: { id: { gte: 1 } }, limit: 15 }
+        .then (rows) -> console.log JSON.stringify rows
+        # .then -> Db.select 'test'
+        # .then (res) ->
+        #   console.log JSON.stringify res
+
+      # Db.connect()
+      #   .then ->
+      #     Db.execute 'PRAGMA foreign_keys'
+      #   .then (res) ->
+      #     console.log JSON.stringify res.rows.item(0)
+      #   .then ->
+      #     Db.resetTables()
+      #   .then ->
+      #     Db.seed
+      #       wallets: [
+      #         { id: 1, name: 'Наличные', type: 'cash', balance: 0 }
+      #         { id: 2, name: 'Карта', type: 'card', balance: 0 }
+      #       ]
+      #       types: [
+      #         { id: 0, name: '<N/A>' }
+      #         { id: 1, name: 'Кафе' }
+      #         { id: 2, name: 'Рестораны' }
+      #         { id: 3, name: 'Техника' }
+      #         { id: 4, name: 'Arduino', parent_id: 3 }
+      #         { id: 5, name: 'Одежда' }
+      #       ]
+      #       sms_matchers: [
+      #         {
+      #           number: 900
+      #           matchFn: '(' + ((message) ->
+      #             matches = message.body.match /^(\w+) (\d{2}\.\d{2}\.\d{2} \d{2}:\d{2}) ([^\d]+) ([\d\.]+)р (.*) Баланс: ([\d\.]+)р$/
+      #             if matches
+      #               [all, card, dateRaw, operationRaw, sumRaw, place, balanceRaw] = matches
+      #               return {
+      #                 card
+      #                 date: moment(dateRaw, 'DD.MM.YYYY HH:mm:ss')
+      #                 operation: { 'покупка': 'payment', 'выдача наличных': 'cashOut', 'зачисление': 'cashIn' }[operationRaw]
+      #                 sum: Math.round sumRaw * 100
+      #                 place
+      #                 balance: Math.round balanceRaw * 100
+      #               }
+      #             else
+      #               null
+      #           ).toString() + ')'
+      #         }
+      #       ]
+      #       sms: [
+      #       ]
+      #   .then ->
+      #     Db.seed
+      #       flows: [
+      #         { sum: 25000, source_id: 1, type_id: 1, date: moment().subtract('1', 'day').startOf('day').add('14', 'hours').unix() }
+      #         { sum: 72000, source_id: 2, type_id: 4, date: moment().subtract('1', 'day').startOf('day').add('15', 'hours').unix() }
+      #         { sum: 1200000, source_id: 2, type_id: 5, date: moment().subtract('1', 'day').startOf('day').add('21', 'hours').unix() }
+      #         { sum: 32000, source_id: 1, type_id: 1, date: moment().subtract('2', 'hours').unix() }
+      #         { sum: 47000, source_id: 2, type_id: 1, date: moment().subtract('1', 'hours').unix() }
+      #       ]
+      #   .then ->
+      #     console.log 'Seed!'
+      #     SMSParser.getMessagesFromNumber 900
+      #       .then ->
+      #         console.log JSON.stringify arguments
   ]
 
   .config [
