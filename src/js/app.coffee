@@ -58,6 +58,7 @@ angular.module 'app', ['app.controllers', 'app.services', 'ionic', 'ngCordova']
             ]
             sms: [
             ]
+        .then ->
           Db.seed
             flows: [
               { sum: 25000, source_id: 1, type_id: 1, date: moment().subtract('1', 'day').startOf('day').add('14', 'hours').unix() }
@@ -66,8 +67,11 @@ angular.module 'app', ['app.controllers', 'app.services', 'ionic', 'ngCordova']
               { sum: 32000, source_id: 1, type_id: 1, date: moment().subtract('2', 'hours').unix() }
               { sum: 47000, source_id: 2, type_id: 1, date: moment().subtract('1', 'hours').unix() }
             ]
-
-      SMSParser.get()
+        .then ->
+          console.log 'Seed!'
+          SMSParser.getMessagesFromNumber 900
+            .then ->
+              console.log JSON.stringify arguments
   ]
 
   .config [
@@ -131,11 +135,7 @@ angular.module 'app', ['app.controllers', 'app.services', 'ionic', 'ngCordova']
             id: type: 'INTEGER'
             number: type: 'TEXT', null: false
             matchFn: type: 'TEXT', null: false
-        sms:
-          primaryKey: 'id'
-          columns:
-            id: type: 'INTEGER'
-            sms_id: type: 'INTEGER', null: false
+            readFrom: type: 'INTEGER', null: false, default: '0'
 
       DbProvider.setDbName 'accountant'
       DbProvider.setSchema schema
