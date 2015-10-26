@@ -65,7 +65,8 @@ angular.module 'app', ['app.controllers', 'app.services', 'ionic', 'ngCordova']
               { sum: 47000, source_id: 2, type_id: 1, date: moment().subtract('1', 'hours').unix() }
             ]
         .then ->
-          console.log 'Seed!'
+          console.log 'Seed done!'
+          Db.setPrepared()
       #     SMSParser.getMessagesFromNumber 900
       #       .then ->
       #         console.log JSON.stringify arguments

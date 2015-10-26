@@ -3,6 +3,7 @@ Db = require './db'
 class DbWithSchema extends Db
   constructor: ($cordovaSQLite, $ionicPlatform, $q, queryBuilder, options) ->
     super arguments...
+    @prepareDeferred = @$q.defer()
     @tables = {}
     for tableName of @options.schema
       @[tableName] = @tables[tableName] = new Table @, tableName
@@ -36,6 +37,12 @@ class DbWithSchema extends Db
         .then do (tableName) ->
           (rows) ->
             console.log "Table #{tableName} contains #{rows.length} rows"
+
+  prepare: ->
+    @prepareDeferred.promise
+
+  setPrepared: ->
+    @prepareDeferred.resolve()
 
 class Table
   constructor: (@db, @name) ->
