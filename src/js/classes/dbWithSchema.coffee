@@ -1,8 +1,8 @@
 Db = require './db'
 
 class DbWithSchema extends Db
-  constructor: (dbName, $cordovaSQLite, $ionicPlatform, @schema) ->
-    super dbName, $cordovaSQLite, $ionicPlatform
+  constructor: (dbName, $cordovaSQLite, $ionicPlatform, $q, @schema) ->
+    super dbName, $cordovaSQLite, $ionicPlatform, $q
     @tables = {}
     for tableName of @schema
       @[tableName] = @tables[tableName] = new Table @, tableName
@@ -17,8 +17,10 @@ class DbWithSchema extends Db
       table.createTable()
 
   seed: (data) ->
+    qs = []
     for tableName, records of data
-      table.insertMultiple records if (table = @tables[tableName])
+      qs.push(table.insertMultiple records) if (table = @tables[tableName])
+    @$q.all qs
 
 class Table
   constructor: (@db, @name) ->

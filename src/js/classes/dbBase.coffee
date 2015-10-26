@@ -1,14 +1,20 @@
 class DbBase
-  constructor: (@dbName, @$cordovaSQLite, @$ionicPlatform) ->
+  constructor: (@dbName, @$cordovaSQLite, @$ionicPlatform, @$q) ->
     @connected = false
 
   connect: ->
-    unless @connected
-      @$ionicPlatform.ready =>
-        unless @connected
-          @db = @$cordovaSQLite.openDB @dbName
-          @connected = true
-          @db.executeSql 'PRAGMA foreign_keys = ON'
+    @$q (resolve, reject) =>
+      if @connected
+        resolve()
+      else
+        @$ionicPlatform.ready =>
+          if @connected
+            resolve()
+          else
+            @db = @$cordovaSQLite.openDB @dbName
+            @connected = true
+            @db.executeSql 'PRAGMA foreign_keys = ON'
+            resolve()
 
   execute: (query, params) ->
     @$cordovaSQLite.execute @db, query, params

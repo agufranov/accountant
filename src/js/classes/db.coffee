@@ -1,10 +1,6 @@
 DbBase = require './dbBase'
 
 class QueryHelper
-  constructor: ->
-    super arguments...
-    @verbose = true
-
   @conditionToString: (condition) ->
     return "= #{condition}" if _.isString condition
     return 'IS NULL' if condition.null is true
@@ -24,16 +20,20 @@ class QueryHelper
       .join ' AND '
 
 class Db extends DbBase
+  constructor: (dbName, $cordovaSQLite, $ionicPlatform, $q) ->
+    super dbName, $cordovaSQLite, $ionicPlatform, $q
+    @verbose = true
+
   createTable: (name, defs, ifNotExists = false) ->
     query = "CREATE TABLE"
     query += " IF NOT EXISTS" if ifNotExists is true
     query += " #{name} (#{defs.join ', '})"
     @execute query
       .then(
-        (res) ->
+        (res) =>
           console.log "Success: CREATE TABLE #{name}", JSON.stringify res if @verbose
         ,
-        (err) ->
+        (err) =>
           console.log "ERROR: CREATE TABLE #{name}" if @verbose
       )
 
@@ -43,11 +43,11 @@ class Db extends DbBase
     query += " #{name}"
     @execute query
       .then(
-        (res) ->
+        (res) =>
           console.log "Success: DROP TABLE #{name}", JSON.stringify res if @verbose
 
         ,
-        (err) ->
+        (err) =>
           console.log "ERROR: DROP TABLE #{name}" if @verbose
       )
 
@@ -58,12 +58,12 @@ class Db extends DbBase
     query += " LIMIT #{options.limit}" if options.limit?
     @execute query
       .then(
-        (res) ->
+        (res) =>
           console.log "Success: got #{res.rows.length} from <#{query}>" if @verbose
           console.log JSON.stringify res if @verbose
           (res.rows.item i for i in [0...res.rows.length])
         ,
-        (err) ->
+        (err) =>
           console.log "ERROR: <#{query}>" if @verbose
       )
 
@@ -73,16 +73,16 @@ class Db extends DbBase
     query = "INSERT INTO #{tableName} (#{colsStr}) VALUES (#{qs})"
     @execute query, _.values o
       .then(
-        (res) ->
+        (res) =>
           console.log "Success: inserted #{res.rowsAffected} rows <#{query}>" if @verbose
           console.log JSON.stringify res if @verbose
           res
         ,
-        (err) ->
+        (err) =>
           console.log "ERROR: <#{query}>" if @verbose
       )
 
   insertMultiple: (tableName, os) ->
-    (@insert tableName, o for o in os)
+    @$q.all (@insert tableName, o for o in os)
 
 module.exports = Db

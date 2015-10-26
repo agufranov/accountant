@@ -12,8 +12,9 @@ angular.module 'app.services'
       $get: [
         '$cordovaSQLite'
         '$ionicPlatform'
-        ($cordovaSQLite, $ionicPlatform) ->
-          db = new DbWithSchema dbName, $cordovaSQLite, $ionicPlatform, schema
+        '$q'
+        ($cordovaSQLite, $ionicPlatform, $q) ->
+          db = new DbWithSchema dbName, $cordovaSQLite, $ionicPlatform, $q, schema
           db.verbose = false
           db
       ]
