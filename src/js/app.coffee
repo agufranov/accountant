@@ -16,42 +16,6 @@ angular.module 'app', ['app.controllers', 'app.services', 'ionic', 'ngCordova']
 
       moment.locale 'ru'
 
-      # Db.connect()
-      #   # .then -> Db.execute 'PRAGMA foreign_keys'
-      #   # .then (res) ->
-      #   #   console.log JSON.stringify res.rows.item(0)
-      #
-      #   # .then -> Db.insert 'test', { data: 'waer' }
-      #
-      #         # setTimeout ->
-      #         #   tx.executeSql 'INSERT INTO test(ata) VALUES (?)', ['4']
-      #         # , 10
-      #   .then -> Db.dropTable 'test', ifExists: true
-      #   .then -> Db.createTable 'test', [ 'id integer primary key', 'data text' ]
-      #   # .then ->
-      #   #   Db.transaction (tx) ->
-      #   #     Db.insert 'test', { data: 'Alice' }, transaction: tx
-      #   #     Db.insert 'test', { daa: 'Bob' }, transaction: tx
-      #   #     Db.insert 'test', { data: 'Charley' }, transaction: tx
-      #   .then ->
-      #     Db.transaction (tx) ->
-      #       Db.insertMultiple 'test', [
-      #         { data: 'Alice' }
-      #         { data: 'Bob' }
-      #         { data: 'Charley' }
-      #       ], {}, tx
-      #       Db.insert 'test', { data: 'Bravo!' }, {}, tx
-      #   .then(
-      #     ->
-      #       Db.select 'test', { columns: ['id', 'data'], where: { id: { gte: 1 } }, limit: 15 }
-      #     ->
-      #       Db.select 'test', { columns: ['id', 'data'], where: { id: { gte: 1 } }, limit: 15 }
-      #   )
-      #   .then (rows) -> console.log JSON.stringify rows
-      #   # .then -> Db.select 'test'
-      #   # .then (res) ->
-      #   #   console.log JSON.stringify res
-
       Db.connect()
         .then ->
           Db.execute 'PRAGMA foreign_keys'
@@ -100,8 +64,8 @@ angular.module 'app', ['app.controllers', 'app.services', 'ionic', 'ngCordova']
               { sum: 32000, source_id: 1, type_id: 1, date: moment().subtract('2', 'hours').unix() }
               { sum: 47000, source_id: 2, type_id: 1, date: moment().subtract('1', 'hours').unix() }
             ]
-      #   .then ->
-      #     console.log 'Seed!'
+        .then ->
+          console.log 'Seed!'
       #     SMSParser.getMessagesFromNumber 900
       #       .then ->
       #         console.log JSON.stringify arguments
@@ -172,4 +136,5 @@ angular.module 'app', ['app.controllers', 'app.services', 'ionic', 'ngCordova']
 
       DbProvider.options.dbName = 'accountant'
       DbProvider.options.schema = schema
+      DbProvider.options.logLevel = 'debug'
   ]

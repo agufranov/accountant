@@ -30,6 +30,13 @@ class DbWithSchema extends Db
         if (table = @tables[tableName])
           table.insertMultiple records, {}, tx
 
+  info: ->
+    for tableName, table of @tables
+      table.select()
+        .then do (tableName) ->
+          (rows) ->
+            console.log "Table #{tableName} contains #{rows.length} rows"
+
 class Table
   constructor: (@db, @name) ->
     @def = @db.options.schema[@name]
