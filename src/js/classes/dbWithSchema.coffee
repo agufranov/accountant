@@ -7,20 +7,28 @@ class DbWithSchema extends Db
     for tableName of @options.schema
       @[tableName] = @tables[tableName] = new Table @, tableName
 
-  createTables: (ifNotExists = false) ->
+  createTables: (options) ->
+    qs = []
     for tableName, table of @tables
-      table.createTable ifNotExists
+      qs.push table.createTable options
+    @$q.all qs
 
   resetTables: ->
+    qs = []
     for tableName, table of @tables
-      table.dropTable true
-      table.createTable()
+      qs.push(
+        table.dropTable ifExists: true
+          .then do (table) ->
+            ->
+              table.createTable()
+      )
+    @$q.all qs
 
   seed: (data) ->
-    qs = []
-    for tableName, records of data
-      qs.push(table.insertMultiple records) if (table = @tables[tableName])
-    @$q.all qs
+    @transaction (tx) =>
+      for tableName, records of data
+        if (table = @tables[tableName])
+          table.insertMultiple records, {}, tx
 
 class Table
   constructor: (@db, @name) ->
@@ -50,17 +58,17 @@ class Table
         colType = refTableDef.columns[refPk].type
         fkStrs.push "FOREIGN KEY(#{colName}) REFERENCES #{refTableName}(#{refPk})"
         
-      defStr = "#{colName} #{colType}"
-      defStr += " PRIMARY KEY" if colName is @def.primaryKey
-      defStr += " NOT NULL" if colDef.null is false
-      defStr += " CHECK (#{colDef.check})" if colDef.check
-      defStr += " DEFAULT #{colDef.default}" if colDef.default
+      defStr = @db.queryBuilder.makeQuery [
+        "#{colName} #{colType}"
+        "PRIMARY KEY" if colName is @def.primaryKey
+        "NOT NULL" if colDef.null is false
+        "CHECK (#{colDef.check})" if colDef.check
+        "DEFAULT #{colDef.default}" if colDef.default
+      ]
       defStrs.push defStr
-    result = defStrs.concat fkStrs
-    console.log result if @verbose #!!!!!!! TODO
-    result
+    defStrs.concat fkStrs
 
-  createTable: (ifNotExists) ->
-    @db.createTable @name, @getDefs(), ifNotExists
+  createTable: (options) ->
+    @db.createTable @name, @getDefs(), options
 
 module.exports = DbWithSchema

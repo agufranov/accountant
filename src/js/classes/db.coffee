@@ -1,8 +1,8 @@
 DbBase = require './dbBase'
 
 class Db extends DbBase
-  createTable: (tableName, options = {}, transaction) ->
-    query = @queryBuilder.createTable tableName, options
+  createTable: (tableName, defs, options = {}, transaction) ->
+    query = @queryBuilder.createTable tableName, defs, options
     @execute query, [], transaction
 
   dropTable: (tableName, options = {}, transaction) ->

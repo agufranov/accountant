@@ -23,12 +23,12 @@ angular.module 'app.services'
           _.filter parts
             .join ' '
 
-        createTable: (tableName, options = {}) ->
+        createTable: (tableName, defs, options = {}) ->
           v.makeQuery [
             "CREATE TABLE"
             "IF NOT EXISTS" if options.ifNotExists
             tableName
-            "(#{options.defs.join ', '})"
+            "(#{defs.join ', '})"
           ]
 
         dropTable: (tableName, options = {}) ->
@@ -52,7 +52,7 @@ angular.module 'app.services'
         insert: (tableName, record, options = {}) ->
           keys = _.keys record
           colsStr = keys.join ', '
-          qs = _.repeat '?', keys.length
+          qs = _.repeat('?', keys.length).split('').join ', '
           v.makeQuery [
             "INSERT INTO"
             tableName
