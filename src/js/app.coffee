@@ -174,6 +174,6 @@ angular.module 'app', ['app.controllers', 'app.services', 'ionic', 'ngCordova']
             matchFn: type: 'TEXT', null: false
             readFrom: type: 'INTEGER', null: false, default: '0'
 
-      DbProvider.setDbName 'accountant'
-      DbProvider.setSchema schema
+      DbProvider.options.dbName = 'accountant'
+      DbProvider.options.schema = schema
   ]
