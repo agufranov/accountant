@@ -1,22 +1,17 @@
 class DbBase
   constructor: (@$cordovaSQLite, @$ionicPlatform, @$q, @queryBuilder, @options) ->
-    @connected = false
     @options.logLevel ||= 'error'
     @logLevels = error: 1, debug: 2
 
-  connect: ->
-    @$q (resolve, reject) =>
-      if @connected
-        resolve()
-      else
-        @$ionicPlatform.ready =>
-          if @connected
-            resolve()
-          else
-            @db = @$cordovaSQLite.openDB @options.dbName
-            @connected = true
-            @db.executeSql 'PRAGMA foreign_keys = ON'
-            resolve()
+    @readyQ = @$q.defer()
+    @$ionicPlatform.ready =>
+      @db = @$cordovaSQLite.openDB @options.dbName
+      @connected = true
+      @db.executeSql 'PRAGMA foreign_keys = ON'
+      @readyQ.resolve()
+
+  ready: (cb) ->
+    @readyQ.promise.then cb
 
   execute: (query, params, transaction) ->
     if transaction
