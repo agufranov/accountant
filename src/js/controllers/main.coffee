@@ -1,4 +1,5 @@
-angular.module 'app.controllers', ['angularMoment']
+angular.module 'app.controllers'
+
   .controller 'mainCtrl', [
     '$scope'
     'Db'
@@ -24,15 +25,4 @@ angular.module 'app.controllers', ['angularMoment']
                 gt: moment().subtract(3, 'hours').unix()
         .then (flows) ->
           $scope.flows = flows.map f
-  ]
-
-  .controller 'addCtrl', [
-    '$scope'
-    ($scope) ->
-  ]
-
-  .controller 'testCtrl', [
-    '$scope'
-    ($scope) ->
-
   ]
