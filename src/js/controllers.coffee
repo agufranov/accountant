@@ -30,3 +30,9 @@ angular.module 'app.controllers', ['angularMoment']
     '$scope'
     ($scope) ->
   ]
+
+  .controller 'testCtrl', [
+    '$scope'
+    ($scope) ->
+
+  ]

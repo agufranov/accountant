@@ -25,5 +25,10 @@ angular.module 'app'
               templateUrl: 'templates/add.html'
               controller: 'addCtrl'
 
-      $urlRouterProvider.otherwise '/app/main'
+        .state 'test',
+          url: '/test'
+          templateUrl: 'templates/test.html'
+          controller: 'testCtrl'
+
+      $urlRouterProvider.otherwise '/test'
   ]
