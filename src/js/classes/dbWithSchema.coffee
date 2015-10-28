@@ -3,7 +3,7 @@ Db = require './db'
 class DbWithSchema extends Db
   constructor: ($cordovaSQLite, $ionicPlatform, $q, queryBuilder, options) ->
     super arguments...
-    @prepareDeferred = @$q.defer()
+    @preparedQ = @$q.defer()
     @tables = {}
     for tableName of @options.schema
       @[tableName] = @tables[tableName] = new Table @, tableName
@@ -38,11 +38,11 @@ class DbWithSchema extends Db
           (rows) ->
             console.log "Table #{tableName} contains #{rows.length} rows"
 
-  prepare: ->
-    @prepareDeferred.promise
+  prepared: (cb) ->
+    @preparedQ.promise.then cb
 
   setPrepared: ->
-    @prepareDeferred.resolve()
+    @preparedQ.resolve()
 
 class Table
   constructor: (@db, @name) ->
@@ -53,6 +53,7 @@ class Table
       'select'
       'insert'
       'insertMultiple'
+      'update',
     ]
       @[operation] = _.partial @db[operation], @name
         .bind @db

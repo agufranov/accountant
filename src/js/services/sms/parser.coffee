@@ -13,7 +13,7 @@ angular.module 'app.services'
             SMS.listSMS {
               address: @matcher.number
               maxCount: 10000
-              # indexFrom: @matcher.readFrom
+              indexFrom: @matcher.readFrom
             }, (messages) ->
               resolve messages
 
@@ -21,30 +21,43 @@ angular.module 'app.services'
         constructor: ->
 
         init: ->
-          $q (resolve, reject) =>
-            Db.connect()
-              .then ->
-                Db.sms_matchers.select()
-              .then (matchers) =>
-                @matchers = matchers
-                resolve()
+          Db.connect()
+            .then ->
+              Db.sms_matchers.select()
+            .then (matchers) =>
+              @matchers = matchers
 
         getMessagesFromNumber: (number) ->
-          $q (resolve, reject) =>
-            @init()
-              .then =>
-                matcher = _.find @matchers, number: number.toString()
-                console.log JSON.stringify @matchers
-                messageProvider = new MessageProvider matcher
-                messageProvider.getMessages()
-                  .then (messages) ->
-                    parsedMessages = _ messages
-                      .map eval matcher.matchFn
-                      .filter()
-                      .value()
-                    resolve parsedMessages
+          matcher = _.find @matchers, number: number.toString()
+          console.log JSON.stringify @matchers
+          messageProvider = new MessageProvider matcher
+          messageProvider.getMessages()
+            .then (messages) ->
+              parsedMessages = _ messages
+                .map eval matcher.matchFn
+                .filter()
+                .value()
 
-      return new Parser()
+      go: ->
+        Db.ready ->
+          Db.sms_matchers.select()
+        .then (matchers) ->
+          for matcher in matchers
+            new MessageProvider matcher
+              .getMessages()
+              .then (messages) ->
+                console.log JSON.stringify message for message in messages
+                maxMessageId = _.max(messages, '_id')._id
+                console.log maxMessageId
+                return
+                parsedMessages = _ messages
+                  .map eval matcher.matchFn
+                  .filter()
+                  .value()
+                flows = parsedMessages.map messageToFlow
+                Db.transaction (tx) ->
+                  Db.flows.insertMultiple flows, {}, tx
+                  Db.sms_matchers.update
           
 
       # getMatchers: ->

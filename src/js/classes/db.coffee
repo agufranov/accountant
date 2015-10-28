@@ -26,4 +26,8 @@ class Db extends DbBase
       @transaction (tx) =>
         @insert tableName, record, options, tx for record in records
 
+  update: (tableName, o, options = {}, transaction) ->
+    query = @queryBuilder.update tableName, o, options
+    @execute query, _.values(o), transaction
+
 module.exports = Db

@@ -4,7 +4,7 @@ angular.module 'app.services'
     ->
       v = {
         conditionToString: (condition) ->
-          return "= #{condition}" if _.isString condition
+          return "= #{condition}" unless _.isObject condition
           return 'IS NULL' if condition.null is true
           return 'IS NOT NULL' if condition.null is false
           return "> #{condition.gt}" if condition.gt?
@@ -43,8 +43,10 @@ angular.module 'app.services'
             options.columns.join ', '
           else '*'
           v.makeQuery [
-            "SELECT #{colsStr}"
-            "FROM #{tableName}"
+            "SELECT"
+            colsStr
+            "FROM"
+            tableName
             "WHERE #{v.whereToString options.where}" if options.where?
             "LIMIT #{options.limit}" if options.limit?
           ]
@@ -59,6 +61,16 @@ angular.module 'app.services'
             "(#{colsStr})"
             "VALUES"
             "(#{qs})"
+          ]
+
+        update: (tableName, o, options = {}) ->
+          expr = ("#{key} = ?" for key of o).join ', '
+          v.makeQuery [
+            "UPDATE"
+            tableName
+            "SET"
+            expr
+            "WHERE #{v.whereToString options.where}" if options.where?
           ]
       }
   ]

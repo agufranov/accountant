@@ -29,5 +29,10 @@ schema =
       number: type: 'TEXT', null: false
       matchFn: type: 'TEXT', null: false
       readFrom: type: 'INTEGER', null: false, default: '0'
+  test:
+    primaryKey: 'id'
+    columns:
+      id: type: 'INTEGER'
+      data: type: 'TEXT'
 
 module.exports = schema

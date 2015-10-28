@@ -6,7 +6,6 @@ class DbBase
     @readyQ = @$q.defer()
     @$ionicPlatform.ready =>
       @db = @$cordovaSQLite.openDB @options.dbName
-      @connected = true
       @db.executeSql 'PRAGMA foreign_keys = ON'
       @readyQ.resolve()
 
