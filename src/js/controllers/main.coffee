@@ -6,7 +6,6 @@ angular.module 'app.controllers'
     ($scope, Db) ->
       f = (flow) ->
         flow.date = flow.date * 1000
-        flow.sum = (flow.sum / 100).toFixed 2
         flow.type = _.find $scope.types, id: flow.type_id
         flow.wallet = _.find $scope.wallets, id: flow.source_id
         flow

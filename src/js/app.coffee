@@ -24,3 +24,4 @@ angular.module 'app', ['app.controllers', 'app.services', 'ionic', 'ngCordova']
 
 require './prepareDb'
 require './routes'
+require './filters'
