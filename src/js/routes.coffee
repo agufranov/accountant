@@ -18,6 +18,13 @@ angular.module 'app'
               templateUrl: 'templates/main.html'
               controller: 'mainCtrl'
 
+        .state 'app.flow',
+          url: '/flows/:flowId'
+          views:
+            'menu-content':
+              templateUrl: 'templates/flow.html'
+              controller: 'flowCtrl'
+
         .state 'app.add',
           url: '/add'
           views:
