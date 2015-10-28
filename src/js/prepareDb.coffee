@@ -4,7 +4,8 @@ angular.module 'app'
 
   .run [
     'Db'
-    (Db) ->
+    'SMSParser'
+    (Db, SMSParser) ->
       Db.ready ->
         Db.execute 'PRAGMA foreign_keys'
       .then (res) ->
@@ -15,5 +16,8 @@ angular.module 'app'
         Db.seed seedData
       .then ->
         console.log 'Seed done!'
+        SMSParser.go()
+      .then ->
         Db.setPrepared()
+
   ]

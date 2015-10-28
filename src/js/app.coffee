@@ -19,7 +19,7 @@ angular.module 'app', ['app.controllers', 'app.services', 'ionic', 'ngCordova']
     (DbProvider) ->
       DbProvider.options.dbName = 'accountant'
       DbProvider.options.schema = schema
-      DbProvider.options.logLevel = 'error'
+      DbProvider.options.logLevel = 'debug'
   ]
 
 require './prepareDb'

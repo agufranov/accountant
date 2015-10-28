@@ -30,5 +30,5 @@ angular.module 'app'
           templateUrl: 'templates/test.html'
           controller: 'testCtrl'
 
-      $urlRouterProvider.otherwise '/test'
+      $urlRouterProvider.otherwise '/app/main'
   ]

@@ -11,18 +11,18 @@ angular.module 'app.controllers'
         flow.wallet = _.find $scope.wallets, id: flow.source_id
         flow
 
-      Db.prepare()
-        .then -> Db.wallets.select()
-        .then (wallets) -> $scope.wallets = wallets
+      Db.prepared ->
+        Db.wallets.select()
+      .then (wallets) -> $scope.wallets = wallets
 
-        .then -> Db.types.select()
-        .then (types) -> $scope.types = types
+      .then -> Db.types.select()
+      .then (types) -> $scope.types = types
 
-        .then ->
-          Db.flows.select
-            where:
-              date:
-                gt: moment().subtract(3, 'hours').unix()
-        .then (flows) ->
-          $scope.flows = flows.map f
+      .then ->
+        # where:
+        #   date:
+        #     gt: moment().subtract(3, 'hours').unix()
+        Db.flows.select()
+      .then (flows) ->
+        $scope.flows = flows.map f
   ]

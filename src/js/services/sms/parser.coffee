@@ -20,80 +20,42 @@ angular.module 'app.services'
       class Parser
         constructor: ->
 
-        init: ->
-          Db.connect()
-            .then ->
-              Db.sms_matchers.select()
-            .then (matchers) =>
-              @matchers = matchers
-
-        getMessagesFromNumber: (number) ->
-          matcher = _.find @matchers, number: number.toString()
-          console.log JSON.stringify @matchers
-          messageProvider = new MessageProvider matcher
-          messageProvider.getMessages()
-            .then (messages) ->
-              parsedMessages = _ messages
-                .map eval matcher.matchFn
-                .filter()
-                .value()
-
       go: ->
+        snapshot = {}
         Db.ready ->
-          Db.sms_matchers.select()
-        .then (matchers) ->
-          for matcher in matchers
-            new MessageProvider matcher
-              .getMessages()
-              .then (messages) ->
-                console.log JSON.stringify message for message in messages
-                maxMessageId = _.max(messages, '_id')._id
-                console.log maxMessageId
-                return
-                parsedMessages = _ messages
-                  .map eval matcher.matchFn
-                  .filter()
-                  .value()
-                flows = parsedMessages.map messageToFlow
-                Db.transaction (tx) ->
-                  Db.flows.insertMultiple flows, {}, tx
-                  Db.sms_matchers.update
-          
+          $q.all [
+            Db.sms_matchers.select().then (matchers) -> snapshot.matchers = matchers
+            Db.wallets.select().then (wallets) -> snapshot.wallets = wallets
+          ]
+        .then ->
+          messageToFlow = (msg) ->
+            walletId = undefined
+            if matchingWallet = _.find(snapshot.wallets, sms_name: msg.card)
+              walletId = matchingWallet.id
+            sum: if msg.operation is 'cashIn' then -msg.sum else msg.sum
+            source_id: walletId
+            date: msg.date
+            sms_card_name: msg.card
+            sms_place_name: msg.place
+            sms_balance: msg.balance
 
-      # getMatchers: ->
-      #   $q (resolve, reject) =>
-      #     Db.connect()
-      #       .then ->
-      #         Db.sms_matchers.select()
-      #       .then (matchers) =>
-      #         resolve matchers
-      #
-      # getMessages: (matchers) ->
-      #   $q (resolve, reject) =>
-      #     numbers = _.map matchers, 'number'
-      #     qs = []
-      #     for number in numbers
-      #       qs.push $q (resolveChunk, rejectChunk) ->
-      #         SMS.listSMS { address: number, maxCount: 100000 }, (messages) ->
-      #           resolveChunk messages
-      #     $q.all qs
-      #       .then (messageChunks) ->
-      #         messages = _.flatten messageChunks
-      #         resolve messages
-      #
-      # getParsedMessages: (messages, matchers) ->
-      #   _ messages
-      #     .map (message) ->
-      #       matcher = _.find matchers, number: message.address
-      #       (eval matcher.matchFn) message
-      #     .filter()
-      #     .value()
-      #
-      # get: ->
-      #   @getMatchers()
-      #     .then (matchers) =>
-      #       @getMessages matchers
-      #         .then (messages) =>
-      #           parsedMessages = @getParsedMessages messages, matchers
-      #           console.log JSON.stringify parsedMessages
+          qs = []
+          for matcher in snapshot.matchers
+            qs.push(new MessageProvider matcher
+              .getMessages()
+              .then do (matcher) ->
+                (messages) ->
+                  maxMessageId = _.max(messages, '_id')._id
+                  console.log maxMessageId
+                  parsedMessages = _ messages
+                    .map eval matcher.matchFn
+                    .filter()
+                    .value()
+                  console.log JSON.stringify message for message in parsedMessages
+                  flows = parsedMessages.map messageToFlow
+                  Db.transaction (tx) ->
+                    Db.flows.insertMultiple flows, {}, tx
+                    Db.sms_matchers.update { readFrom: maxMessageId + 1 }, { id: matcher.id }, tx
+            )
+          $q.all qs
   ]
