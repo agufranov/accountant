@@ -46,7 +46,6 @@ angular.module 'app.services'
               .then do (matcher) ->
                 (messages) ->
                   maxMessageId = _.max(messages, '_id')._id
-                  console.log maxMessageId
                   parsedMessages = _ messages
                     .map eval matcher.matchFn
                     .filter()
@@ -56,6 +55,12 @@ angular.module 'app.services'
                   Db.transaction (tx) ->
                     Db.flows.insertMultiple flows, {}, tx
                     Db.sms_matchers.update { readFrom: maxMessageId + 1 }, { id: matcher.id }, tx
+                  .then ->
+                    # TODO separate from here
+                    Db.flows.select columns: ['SUM(sum) as total']
+                  .then (rows) ->
+                    console.log rows[0].total
+                    Db.wallets.update { balance: -rows[0].total }, { where: { id: 1 } }
             )
           $q.all qs
   ]
