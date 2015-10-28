@@ -3,12 +3,15 @@ schema =
     primaryKey: 'id'
     columns:
       id: type: 'INTEGER'
-      sum: type: 'INTEGER', null: false, check: "TYPEOF(sum) = 'integer' AND sum > 0"
-      type_id: type: 'reference', table: 'types', null: false
+      sum: type: 'INTEGER', null: false, check: "TYPEOF(sum) = 'integer'"
+      type_id: type: 'reference', table: 'types'
       date: type: 'INTEGER', null: false, default: "(strftime('%s', 'now'))"
       comment: type: 'INTEGER', null: false, default: "''"
-      source_id: type: 'reference', table: 'wallets', null: false
+      source_id: type: 'reference', table: 'wallets'
       dest_id: type: 'reference', table: 'wallets'
+      sms_card_name: type: 'TEXT'
+      sms_place_name: type: 'TEXT'
+      sms_balance: type: 'INTEGER'
   wallets:
     primaryKey: 'id'
     columns:
@@ -16,6 +19,7 @@ schema =
       name: type: 'TEXT', null: false
       type: type: 'TEXT', null: false
       balance: type: 'INTEGER', null: false
+      sms_name: type: 'TEXT'
   types:
     primaryKey: 'id'
     columns:

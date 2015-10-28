@@ -1,7 +1,7 @@
 seedData =
   wallets: [
     { id: 1, name: 'Наличные', type: 'cash', balance: 0 }
-    { id: 2, name: 'Карта', type: 'card', balance: 0 }
+    { id: 2, name: 'Карта', type: 'card', balance: 0, sms_name: 'VISA2923' }
   ]
   types: [
     { id: 0, name: '<N/A>' }
@@ -20,7 +20,7 @@ seedData =
           [all, card, dateRaw, operationRaw, sumRaw, place, balanceRaw] = matches
           return {
             card
-            date: moment(dateRaw, 'DD.MM.YYYY HH:mm:ss')
+            date: moment(dateRaw, 'DD.MM.YYYY HH:mm:ss').unix()
             operation: { 'покупка': 'payment', 'выдача наличных': 'cashOut', 'зачисление': 'cashIn' }[operationRaw]
             sum: Math.round sumRaw * 100
             place
