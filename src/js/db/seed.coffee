@@ -20,7 +20,7 @@ seedData =
           [all, card, dateRaw, operationRaw, sumRaw, place, balanceRaw] = matches
           return {
             card
-            date: moment(dateRaw, 'DD.MM.YYYY HH:mm:ss').unix()
+            date: moment.utc(dateRaw, 'DD.MM.YYYY HH:mm:ss').unix()
             operation: { 'покупка': 'payment', 'выдача наличных': 'cashOut', 'зачисление': 'cashIn' }[operationRaw]
             sum: Math.round sumRaw * 100
             place
