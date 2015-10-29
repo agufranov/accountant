@@ -1,7 +1,7 @@
 seedData =
   wallets: [
-    { id: 1, name: 'Наличные', type: 'cash', balance: 0 }
-    { id: 2, name: 'Карта', type: 'card', balance: 0, sms_name: 'VISA2923' }
+    { name: 'Наличные', type: 'card', balance: 0 }
+    { name: 'Карта', type: 'card', balance: 0, sms_name: 'VISA2923' }
   ]
   types: [
     { id: 0, name: '<N/A>' }
