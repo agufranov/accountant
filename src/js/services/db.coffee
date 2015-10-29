@@ -1,4 +1,4 @@
-DbWithSchema = require '../classes/dbWithSchema'
+AccountantDb = require '../classes/accountantDb'
 
 angular.module 'app.services'
 
@@ -16,6 +16,6 @@ angular.module 'app.services'
         '$rootScope'
         'QueryBuilder'
         ($cordovaSQLite, $ionicPlatform, $q, $rootScope, QueryBuilder) ->
-          db = new DbWithSchema $cordovaSQLite, $ionicPlatform, $q, $rootScope, QueryBuilder, @options
+          db = new AccountantDb $cordovaSQLite, $ionicPlatform, $q, $rootScope, QueryBuilder, @options
       ]
   ]

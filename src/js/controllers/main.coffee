@@ -11,12 +11,9 @@ angular.module 'app.controllers'
         flow
 
       Db.prepared ->
-        Db.wallets.select()
-      .then (wallets) -> $scope.wallets = wallets
-
-      .then -> Db.types.select()
-      .then (types) -> $scope.types = types
-
+        Db.snapshot ['wallets', 'types']
+      .then (snapshot) ->
+        _.extend $scope, snapshot
       .then ->
         # where:
         #   date:
@@ -24,4 +21,9 @@ angular.module 'app.controllers'
         Db.flows.select()
       .then (flows) ->
         $scope.flows = flows.map f
+      .then ->
+        Db.updateWallets()
+      .then (res) ->
+        Db.wallets.select()
+      .then (wallets) -> $scope.wallets = wallets
   ]
