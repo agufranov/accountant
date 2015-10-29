@@ -1,7 +1,9 @@
 ion-view
   ion-content.padding
     .card.list
-      ion-radio(ng-repeat='wallet in wallets' ng-model='$parent.source_id' ng-value='wallet.id') {{wallet.name}}
+      ion-radio(ng-repeat='wallet in wallets' ng-model='$parent.source_id' ng-value='wallet.id' name='source_id') {{wallet.name}}
+    .card.list
+      ion-radio(ng-repeat='type in types' ng-model='$parent.type_id' ng-value='type.id' name='type_id') {{type.name}}
     form(ng-submit='onSubmit()')
       .list
         label.item.item-input
