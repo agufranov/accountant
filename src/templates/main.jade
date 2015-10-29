@@ -8,9 +8,10 @@ ion-view
         span.item-note {{wallet.balance | fin}}
     button.button.button-full.button-balanced(ui-sref='app.add') Add
     ion-list
-      ion-item(ng-repeat="flow in flows | orderBy:'-date'" ui-sref='app.flow({ flowId: flow.id })')
+      ion-item.item-icon-left.item-icon-right(ng-repeat="flow in flows | orderBy:'-date'" ui-sref='app.flow({ flowId: flow.id })')
+        i.icon(ng-class='flow.type.icon')
         {{flow.sum | fin}}
         {{flow.sms_place_name}}
-        {{flow.wallet.name}}
         span.item-note(am-time-ago='flow.date')
+        i.icon(style='color:gray' ng-class='{ card: "ion-card", cash: "ion-cash" }[flow.wallet.type]')
     button.button(ui-sref='test') To test

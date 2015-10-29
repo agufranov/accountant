@@ -26,6 +26,7 @@ schema =
       id: type: 'INTEGER'
       name: type: 'TEXT', null: false
       parent_id: type: 'reference', table: 'types'
+      icon: type: 'TEXT'
   sms_matchers:
     primaryKey: 'id'
     columns:

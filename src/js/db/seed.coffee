@@ -1,15 +1,15 @@
 seedData =
   wallets: [
-    { name: 'Наличные', type: 'card', balance: 0 }
+    { name: 'Наличные', type: 'cash', balance: 0 }
     { name: 'Карта', type: 'card', balance: 0, sms_name: 'VISA2923' }
   ]
   types: [
-    { id: 0, name: '<N/A>' }
-    { id: 1, name: 'Кафе' }
-    { id: 2, name: 'Рестораны' }
-    { id: 3, name: 'Техника' }
+    { id: 0, name: '<N/A>', icon: 'ion-help' }
+    { id: 1, name: 'Кафе', icon: 'ion-fork' }
+    { id: 2, name: 'Рестораны', icon: 'ion-coffee' }
+    { id: 3, name: 'Техника', icon: 'ion-calculator' }
     { id: 4, name: 'Arduino', parent_id: 3 }
-    { id: 5, name: 'Одежда' }
+    { id: 5, name: 'Одежда', icon: 'ion-tshirt' }
   ]
   sms_matchers: [
     {
