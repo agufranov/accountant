@@ -1,12 +1,10 @@
 ion-view
   ion-content.padding
     ion-refresher
-    h1 Main
     ion-list
       ion-item(ng-repeat='wallet in wallets')
         span {{wallet.name}}
         span.item-note {{wallet.balance | fin}}
-    button.button.button-full.button-balanced(ui-sref='app.add') Add
     ion-list
       ion-item.item-icon-left.item-icon-right(ng-repeat="flow in flows | orderBy:'-date'" ui-sref='app.flow({ flowId: flow.id })')
         i.icon(ng-class='flow.type.icon')
