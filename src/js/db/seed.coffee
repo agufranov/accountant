@@ -1,7 +1,7 @@
 seedData =
   wallets: [
-    { name: 'Наличные', type: 'cash', balance: 0 }
-    { name: 'Карта', type: 'card', balance: 0, sms_name: 'VISA2923' }
+    { name: 'Наличные', type: 'cash', balance: 0, icon: 'ion-cash assertive' }
+    { name: 'Карта', type: 'card', balance: 0, sms_name: 'VISA2923', icon: 'ion-card balanced' }
   ]
   types: [
     { id: 0, name: '<N/A>', icon: 'ion-help' }

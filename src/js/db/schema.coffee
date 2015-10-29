@@ -20,6 +20,7 @@ schema =
       type: type: 'TEXT', null: false
       balance: type: 'INTEGER', null: false
       sms_name: type: 'TEXT'
+      icon: type: 'TEXT'
   types:
     primaryKey: 'id'
     columns:
