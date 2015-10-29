@@ -1,5 +1,5 @@
 class DbBase
-  constructor: (@$cordovaSQLite, @$ionicPlatform, @$q, @queryBuilder, @options) ->
+  constructor: (@$cordovaSQLite, @$ionicPlatform, @$q, @$rootScope, @queryBuilder, @options) ->
     @options.logLevel ||= 'error'
     @logLevels = error: 1, debug: 2
 

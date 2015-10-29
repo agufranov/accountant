@@ -21,13 +21,16 @@ angular.module 'app.services'
         constructor: ->
 
       go: ->
-        snapshot = {}
+        # snapshot = {}
+        # Db.ready ->
+        #   $q.all [
+        #     Db.sms_matchers.select().then (matchers) -> snapshot.matchers = matchers
+        #     Db.wallets.select().then (wallets) -> snapshot.wallets = wallets
+        #   ]
         Db.ready ->
-          $q.all [
-            Db.sms_matchers.select().then (matchers) -> snapshot.matchers = matchers
-            Db.wallets.select().then (wallets) -> snapshot.wallets = wallets
-          ]
-        .then ->
+          Db.snapshot ['wallets', 'sms_matchers']
+        .then (snapshot) ->
+          console.log 'REWWRRWRRWER', JSON.stringify snapshot
           messageToFlow = (msg) ->
             walletId = undefined
             if matchingWallet = _.find(snapshot.wallets, sms_name: msg.card)
@@ -40,7 +43,7 @@ angular.module 'app.services'
             sms_balance: msg.balance
 
           qs = []
-          for matcher in snapshot.matchers
+          for matcher in snapshot.sms_matchers
             qs.push(new MessageProvider matcher
               .getMessages()
               .then do (matcher) ->

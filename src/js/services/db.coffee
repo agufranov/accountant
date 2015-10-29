@@ -13,8 +13,9 @@ angular.module 'app.services'
         '$cordovaSQLite'
         '$ionicPlatform'
         '$q'
+        '$rootScope'
         'QueryBuilder'
-        ($cordovaSQLite, $ionicPlatform, $q, QueryBuilder) ->
-          db = new DbWithSchema $cordovaSQLite, $ionicPlatform, $q, QueryBuilder, @options
+        ($cordovaSQLite, $ionicPlatform, $q, $rootScope, QueryBuilder) ->
+          db = new DbWithSchema $cordovaSQLite, $ionicPlatform, $q, $rootScope, QueryBuilder, @options
       ]
   ]

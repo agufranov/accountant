@@ -1,7 +1,7 @@
 Db = require './db'
 
 class DbWithSchema extends Db
-  constructor: ($cordovaSQLite, $ionicPlatform, $q, queryBuilder, options) ->
+  constructor: ($cordovaSQLite, $ionicPlatform, $q, $rootScope, queryBuilder, options) ->
     super arguments...
     @preparedQ = @$q.defer()
     @tables = {}
@@ -43,6 +43,17 @@ class DbWithSchema extends Db
 
   setPrepared: ->
     @preparedQ.resolve()
+
+  snapshot: (tableNames) ->
+    snapshot = {}
+    qs = []
+    for tableName, table of _.pick @tables, tableNames
+      q = table.select().then do (tableName) ->
+        (items) ->
+          snapshot[tableName] = items
+      qs.push q
+    @$q.all qs
+      .then -> snapshot
 
 class Table
   constructor: (@db, @name) ->
