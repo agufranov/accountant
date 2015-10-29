@@ -13,6 +13,7 @@ angular.module 'app'
 
         .state 'app.main',
           url: '/main'
+          cache: false
           views:
             'menu-content':
               templateUrl: 'templates/main.html'
