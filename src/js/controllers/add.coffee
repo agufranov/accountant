@@ -2,8 +2,9 @@ angular.module 'app.controllers'
 
   .controller 'addCtrl', [
     '$scope'
+    '$state'
     'Db'
-    ($scope, Db) ->
+    ($scope, $state, Db) ->
       Db.prepared ->
         Db.snapshot ['wallets', 'types']
           .then (snapshot) ->
@@ -18,4 +19,10 @@ angular.module 'app.controllers'
             sum: Math.floor($scope.sum * 100)
           }
           Db.flows.insert o
+        .then(
+          ->
+            $state.go 'app.main'
+          ->
+            alert 'Заполните все поля'
+        )
   ]

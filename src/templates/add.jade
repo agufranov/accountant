@@ -1,12 +1,11 @@
 ion-view
   ion-content.padding
-    .card.list
-      ion-radio(ng-repeat='wallet in wallets' ng-model='$parent.$parent.source_id' ng-value='wallet.id' name='source_id') {{wallet.name}}
-    .card.list
-      ion-radio(ng-repeat='type in types' ng-model='$parent.$parent.type_id' ng-value='type.id' name='type_id') {{type.name}}
-    button.button.button-energized(ng-click='submit()') Add
     form(ng-submit='submit()')
       .list
         label.item.item-input
           input(type='number' placeholder='sum' ng-model='$parent.sum')
-    button.button(ui-sref='app.main') Main
+    button.button.button-balanced.button-full(ng-click='submit()') Add
+    .card.list
+      ion-radio(ng-repeat='wallet in wallets' ng-model='$parent.$parent.source_id' ng-value='wallet.id' name='source_id') {{wallet.name}}
+    .card.list
+      ion-radio(ng-repeat='type in types' ng-model='$parent.$parent.type_id' ng-value='type.id' name='type_id') {{type.name}}
