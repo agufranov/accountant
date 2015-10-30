@@ -13,19 +13,13 @@ angular.module 'app.controllers'
       $scope.filter = {}
 
       Db.prepared ->
+        Db.updateWallets()
+      .then ->
         Db.snapshot ['wallets', 'types']
       .then (snapshot) ->
         _.extend $scope, snapshot
       .then ->
-        # where:
-        #   date:
-        #     gt: moment().subtract(3, 'hours').unix()
         Db.flows.select()
       .then (flows) ->
         $scope.flows = flows.map f
-      .then ->
-        Db.updateWallets()
-      .then (res) ->
-        Db.wallets.select()
-      .then (wallets) -> $scope.wallets = wallets
   ]
