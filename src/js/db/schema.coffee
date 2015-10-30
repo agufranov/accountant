@@ -21,6 +21,13 @@ schema =
       balance: type: 'INTEGER', null: false
       sms_name: type: 'TEXT'
       icon: type: 'TEXT'
+  places:
+    primaryKey: 'id'
+    columns:
+      id: type: 'INTEGER'
+      number_id: type: 'reference', table: 'sms_matchers', null: false
+      name: type: 'TEXT', null: false
+      type_id: type: 'reference', table: 'types'
   types:
     primaryKey: 'id'
     columns:
@@ -35,18 +42,5 @@ schema =
       number: type: 'TEXT', null: false
       matchFn: type: 'TEXT', null: false
       readFrom: type: 'INTEGER', null: false, default: '0'
-  places:
-    primaryKey: 'id'
-    columns:
-      id: type: 'INTEGER'
-      number_id: type: 'reference', table: 'sms_matchers', null: false
-      name: type: 'TEXT', null: false
-      type_id: type: 'reference', table: 'types'
-
-  test:
-    primaryKey: 'id'
-    columns:
-      id: type: 'INTEGER'
-      data: type: 'TEXT'
 
 module.exports = schema

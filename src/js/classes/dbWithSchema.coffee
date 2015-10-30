@@ -9,21 +9,19 @@ class DbWithSchema extends Db
       @[tableName] = @tables[tableName] = new Table @, tableName
 
   createTables: (options) ->
-    qs = []
-    for tableName, table of @tables
-      qs.push table.createTable options
-    @$q.all qs
+    @transaction (tx) =>
+      for tableName, table of @tables
+        table.createTable options, tx
+
+  dropTables: (options) ->
+    @transaction (tx) =>
+      for tableName, table of @tables
+        table.dropTable options, tx
 
   resetTables: ->
-    qs = []
-    for tableName, table of @tables
-      qs.push(
-        table.dropTable ifExists: true
-          .then do (table) ->
-            ->
-              table.createTable()
-      )
-    @$q.all qs
+    @dropTables ifExists: true
+      .then =>
+        @createTables()
 
   seed: (data) ->
     @transaction (tx) =>
