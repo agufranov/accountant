@@ -10,9 +10,11 @@ seedData =
     { id: 3, name: 'Техника', icon: 'ion-calculator' }
     { id: 4, name: 'Arduino', parent_id: 3 }
     { id: 5, name: 'Одежда', icon: 'ion-tshirt' }
+    { id: 6, name: 'Продукты', icon: 'ion-bag' }
   ]
   sms_matchers: [
     {
+      id: 1
       number: 900
       matchFn: '(' + ((message) ->
         matches = message.body.match /^(\w+) (\d{2}\.\d{2}\.\d{2} \d{2}:\d{2}) ([^\d]+) ([\d\.]+)р (.*) Баланс: ([\d\.]+)р$/
@@ -37,6 +39,9 @@ seedData =
     { sum: 1200000, source_id: 2, type_id: 5, date: moment().subtract('1', 'day').startOf('day').add('21', 'hours').unix() }
     { sum: 32000, source_id: 1, type_id: 1, date: moment().subtract('2', 'hours').unix() }
     { sum: 47000, source_id: 2, type_id: 1, date: moment().subtract('1', 'hours').unix() }
+  ]
+  places: [
+    { number_id: 1, name: 'AUCHAN GULLIVER SPB', type_id: 6 }
   ]
 
 module.exports = seedData

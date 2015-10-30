@@ -28,19 +28,24 @@ angular.module 'app.services'
         #     Db.wallets.select().then (wallets) -> snapshot.wallets = wallets
         #   ]
         Db.ready ->
-          Db.snapshot ['wallets', 'sms_matchers']
+          Db.snapshot ['wallets', 'sms_matchers', 'places']
         .then (snapshot) ->
-          console.log 'REWWRRWRRWER', JSON.stringify snapshot
-          messageToFlow = (msg) ->
-            walletId = undefined
-            if matchingWallet = _.find(snapshot.wallets, sms_name: msg.card)
-              walletId = matchingWallet.id
-            sum: if msg.operation is 'cashIn' then -msg.sum else msg.sum
-            source_id: walletId
-            date: msg.date
-            sms_card_name: msg.card
-            sms_place_name: msg.place
-            sms_balance: msg.balance
+          messageToFlow = (matcher) ->
+            (msg) ->
+              walletId = undefined
+              type_id = if (matchingPlace = _.find snapshot.places, number_id: matcher.id, name: msg.place)
+                matchingPlace.type_id
+              else
+                0
+              if matchingWallet = _.find(snapshot.wallets, sms_name: msg.card)
+                walletId = matchingWallet.id
+              sum: if msg.operation is 'cashIn' then -msg.sum else msg.sum
+              source_id: walletId
+              type_id: type_id
+              date: msg.date
+              sms_card_name: msg.card
+              sms_place_name: msg.place
+              sms_balance: msg.balance
 
           qs = []
           for matcher in snapshot.sms_matchers
@@ -54,7 +59,7 @@ angular.module 'app.services'
                     .filter()
                     .value()
                   console.log JSON.stringify message for message in parsedMessages
-                  flows = parsedMessages.map messageToFlow
+                  flows = parsedMessages.map messageToFlow(matcher)
                   Db.transaction (tx) ->
                     Db.flows.insertMultiple flows, {}, tx
                     Db.sms_matchers.update { readFrom: maxMessageId + 1 }, { id: matcher.id }, tx

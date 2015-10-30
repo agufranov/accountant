@@ -4,7 +4,7 @@ schema =
     columns:
       id: type: 'INTEGER'
       sum: type: 'INTEGER', null: false, check: "TYPEOF(sum) = 'integer'"
-      type_id: type: 'reference', table: 'types'
+      type_id: type: 'reference', table: 'types', null: false
       date: type: 'INTEGER', null: false, default: "(strftime('%s', 'now'))"
       comment: type: 'INTEGER', null: false, default: "''"
       source_id: type: 'reference', table: 'wallets'
@@ -35,6 +35,14 @@ schema =
       number: type: 'TEXT', null: false
       matchFn: type: 'TEXT', null: false
       readFrom: type: 'INTEGER', null: false, default: '0'
+  places:
+    primaryKey: 'id'
+    columns:
+      id: type: 'INTEGER'
+      number_id: type: 'reference', table: 'sms_matchers', null: false
+      name: type: 'TEXT', null: false
+      type_id: type: 'reference', table: 'types'
+
   test:
     primaryKey: 'id'
     columns:
