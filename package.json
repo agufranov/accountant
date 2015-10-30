@@ -19,7 +19,8 @@
     "cordova-plugin-splashscreen",
     "com.ionic.keyboard",
     "cordova-sqlite-storage",
-    "com.rjfun.cordova.sms"
+    "com.rjfun.cordova.sms",
+    "cordova-plugin-x-toast"
   ],
   "cordovaPlatforms": []
 }

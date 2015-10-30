@@ -1,0 +1,6 @@
+ion-modal-view
+  button.button(ng-click='closeModal()') Close
+  ion-list
+    ion-radio(ng-repeat='type in types' ng-model='$parent.$parent.flow.type_id' ng-value='type.id' name='type_id')
+      i.icon.royal(ng-class='type.icon')
+      span {{type.name}}

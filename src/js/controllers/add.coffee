@@ -3,8 +3,9 @@ angular.module 'app.controllers'
   .controller 'addCtrl', [
     '$scope'
     '$state'
+    '$cordovaToast'
     'Db'
-    ($scope, $state, Db) ->
+    ($scope, $state, $cordovaToast, Db) ->
       Db.prepared ->
         Db.snapshot ['wallets', 'types']
           .then (snapshot) ->
@@ -23,6 +24,6 @@ angular.module 'app.controllers'
           ->
             $state.go 'app.main'
           ->
-            alert 'Заполните все поля'
+            $cordovaToast.showShortCenter 'Заполните все поля'
         )
   ]

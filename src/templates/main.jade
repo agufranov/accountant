@@ -6,7 +6,6 @@ ion-view
         span {{wallet.name}}
         span.item-note {{wallet.balance | fin}}
     ion-checkbox(ng-model='filter.type_id' ng-true-value=0 ng-false-value='undefined') Only untyped
-    {{filter}}
     ion-list
       ion-item.item-icon-left.item-icon-right(ng-repeat="flow in flows | filter:filter | orderBy:'-date'" ui-sref='app.flow({ flowId: flow.id })')
         i.icon.royal(ng-class='flow.type.icon')
