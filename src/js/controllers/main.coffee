@@ -10,6 +10,8 @@ angular.module 'app.controllers'
         flow.wallet = _.find $scope.wallets, id: flow.source_id
         flow
 
+      $scope.filter = {}
+
       Db.prepared ->
         Db.snapshot ['wallets', 'types']
       .then (snapshot) ->
