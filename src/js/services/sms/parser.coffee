@@ -21,12 +21,6 @@ angular.module 'app.services'
         constructor: ->
 
       go: ->
-        # snapshot = {}
-        # Db.ready ->
-        #   $q.all [
-        #     Db.sms_matchers.select().then (matchers) -> snapshot.matchers = matchers
-        #     Db.wallets.select().then (wallets) -> snapshot.wallets = wallets
-        #   ]
         Db.ready ->
           Db.snapshot ['wallets', 'sms_matchers', 'places']
         .then (snapshot) ->
@@ -43,6 +37,7 @@ angular.module 'app.services'
               source_id: walletId
               type_id: type_id
               date: msg.date
+              sms_matcher_id: matcher.id
               sms_card_name: msg.card
               sms_place_name: msg.place
               sms_balance: msg.balance
