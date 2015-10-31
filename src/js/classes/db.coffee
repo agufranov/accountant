@@ -17,7 +17,11 @@ class Db extends DbBase
 
   insert: (tableName, record, options = {}, transaction) ->
     query = @queryBuilder.insert tableName, record, options
-    @execute query, _.values(record), transaction
+    exec = @execute query, _.values(record), transaction
+    if transaction
+      @constructor.addTransactionImpact transaction, tableName
+    else
+      exec.then => @notifyChanged tableName
 
   insertMultiple: (tableName, records, options = {}, transaction) ->
     if transaction
@@ -28,6 +32,13 @@ class Db extends DbBase
 
   update: (tableName, o, options = {}, transaction) ->
     query = @queryBuilder.update tableName, o, options
-    @execute query, _.values(o), transaction
+    exec = @execute query, _.values(o), transaction
+    if transaction
+      @constructor.addTransactionImpact transaction, tableName
+    else
+      exec.then => @notifyChanged tableName
+
+  @addTransactionImpact: (transaction, tableName) ->
+    (transaction.impact ||= []).push tableName
 
 module.exports = Db

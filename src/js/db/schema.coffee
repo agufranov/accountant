@@ -19,7 +19,7 @@ schema =
       id: type: 'INTEGER'
       name: type: 'TEXT', null: false
       type: type: 'TEXT', null: false
-      balance: type: 'INTEGER', null: false
+      balance: type: 'INTEGER', null: false, check: "TYPEOF(balance) = 'integer'"
       sms_name: type: 'TEXT'
       icon: type: 'TEXT'
   places:

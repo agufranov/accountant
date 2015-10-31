@@ -28,15 +28,23 @@ class DbBase
   transaction: (fn) ->
     @debug 'Transaction start...'
     @$q (resolve, reject) =>
+      impactQ = @$q.defer()
       @db.transaction(
-        fn
+        (tx) ->
+          fn tx
+          impactQ.resolve _.unique (tx.impact || [])
         =>
           @error 'Transaction error'
           reject arguments...
         =>
-          @debug 'Transaction success'
-          resolve arguments...
+          impactQ.promise.then (impact) =>
+            @debug 'Transaction success'
+            @notifyChanged impact...
+            resolve arguments...
       )
+
+  notifyChanged: (tables...) ->
+    @$rootScope.$emit 'db:changed', tables: tables
 
   log: (level, message) ->
     if @logLevels[level] <= @logLevels[@options.logLevel]
