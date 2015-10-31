@@ -17,9 +17,11 @@ angular.module 'app', ['app.controllers', 'app.services', 'ionic', 'ngCordova']
   .config [
     'DbProvider'
     (DbProvider) ->
-      DbProvider.options.dbName = 'accountant'
-      DbProvider.options.schema = schema
-      DbProvider.options.logLevel = 'debug'
+      _.extend DbProvider.options,
+        dbName       : 'accountant'
+        schema       : schema
+        logLevel     : 'debug'
+        cachedTables : ['wallets', 'places', 'types', 'sms_matchers']
   ]
 
 require './prepareDb'

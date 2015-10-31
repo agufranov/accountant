@@ -40,7 +40,8 @@ class DbWithSchema extends Db
     @preparedQ.promise.then cb
 
   setPrepared: ->
-    @preparedQ.resolve()
+    @initCache()
+      .then => @preparedQ.resolve()
 
   snapshot: (tableNames) ->
     snapshot = {}
@@ -52,6 +53,18 @@ class DbWithSchema extends Db
       qs.push q
     @$q.all qs
       .then -> snapshot
+
+  initCache: ->
+    @$rootScope.$on 'db:changed', (event, data) =>
+      tablesToReload = _.intersection data.tables, @options.cachedTables
+      console.log 'DB changed', JSON.stringify tablesToReload
+      @snapshot tablesToReload
+        .then (snapshot) =>
+          _.extend @cache, snapshot
+
+    @snapshot @options.cachedTables
+      .then (snapshot) =>
+        @$rootScope.cache = @cache = snapshot
 
 class Table
   constructor: (@db, @name) ->

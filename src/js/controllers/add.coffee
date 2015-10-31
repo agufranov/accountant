@@ -7,10 +7,7 @@ angular.module 'app.controllers'
     'Db'
     ($scope, $state, $cordovaToast, Db) ->
       Db.prepared ->
-        Db.snapshot ['wallets', 'types']
-          .then (snapshot) ->
-            _.extend $scope, snapshot
-            $scope.source_id = (_.find($scope.wallets, type: 'cash') or _.first($scope.wallets)).id
+        $scope.source_id = (_.find(Db.cache.wallets, type: 'cash') or _.first(Db.cache.wallets)).id
 
       $scope.submit = ->
         Db.ready ->

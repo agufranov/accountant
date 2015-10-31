@@ -12,30 +12,26 @@ angular.module 'app.controllers'
       Db.prepared ->
         Db.flows.select where: id: id
       .then (flows) ->
-        Db.snapshot 'types'
-          .then (snapshot) ->
-            _.extend $scope, snapshot
+        $scope.flow = flows[0]
 
-            $scope.flow = flows[0]
+        findType = -> $scope.flow_type = _.find Db.cache.types, { id: $scope.flow.type_id }
+        findType()
 
-            findType = -> $scope.flow_type = _.find $scope.types, { id: $scope.flow.type_id }
+        $scope.$watch 'flow.type_id', (newValue, oldValue) ->
+          if newValue isnt oldValue
             findType()
+            $scope.type_dirty = true
 
-            $scope.$watch 'flow.type_id', (newValue, oldValue) ->
-              if newValue isnt oldValue
-                findType()
-                $scope.type_dirty = true
+        $scope.type_dirty = false
 
-            $scope.type_dirty = false
-
-            $scope.save = ->
-              Db.flows.update _.pick($scope.flow, 'type_id'), where: id: $scope.flow.id
-                .then(
-                  ->
-                    $cordovaToast.showShortCenter 'Flow saved'
-                    $ionicHistory.goBack()
-                  -> $cordovaToast.showLongCenter 'Error saving flow'
-                )
+        $scope.save = ->
+          Db.flows.update _.pick($scope.flow, 'type_id'), where: id: $scope.flow.id
+            .then(
+              ->
+                $cordovaToast.showShortCenter 'Flow saved'
+                $ionicHistory.goBack()
+              -> $cordovaToast.showLongCenter 'Error saving flow'
+            )
 
       $scope.showModal = ->
         $ionicModal.fromTemplateUrl 'templates/typeModal.html', scope: $scope

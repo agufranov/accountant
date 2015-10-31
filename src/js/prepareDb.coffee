@@ -19,15 +19,6 @@ angular.module 'app'
       #   console.log 'Seed done!'
       #   SMSParser.go()
       # .then ->
-        $rootScope.$on 'db:changed', (event, data) ->
-          console.log 'DB changed', JSON.stringify data
-          Db.snapshot data.tables
-            .then (snapshot) ->
-              _.extend $rootScope, snapshot
-
-        Db.snapshot ['wallets', 'places', 'types', 'sms_matchers']
-      .then (snapshot) ->
-        _.extend $rootScope, snapshot
         Db.setPrepared()
 
   ]

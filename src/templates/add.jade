@@ -6,6 +6,6 @@ ion-view
           input(type='number' placeholder='sum' ng-model='$parent.sum')
     button.button.button-balanced.button-full(ng-click='submit()') Add
     .card.list
-      ion-radio(ng-repeat='wallet in wallets' ng-model='$parent.$parent.source_id' ng-value='wallet.id' name='source_id') {{wallet.name}}
+      ion-radio(ng-repeat='wallet in cache.wallets' ng-model='$parent.$parent.source_id' ng-value='wallet.id' name='source_id') {{wallet.name}}
     .card.list
-      ion-radio(ng-repeat='type in types' ng-model='$parent.$parent.type_id' ng-value='type.id' name='type_id') {{type.name}}
+      ion-radio(ng-repeat='type in cache.types' ng-model='$parent.$parent.type_id' ng-value='type.id' name='type_id') {{type.name}}
