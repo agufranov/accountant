@@ -38,5 +38,12 @@ angular.module 'app'
           templateUrl: 'templates/test.html'
           controller: 'testCtrl'
 
+        .state 'app.places',
+          url: '/places'
+          views:
+            'menu-content':
+              templateUrl: 'templates/places.html'
+              controller: 'placesCtrl'
+
       $urlRouterProvider.otherwise '/app/main'
   ]
