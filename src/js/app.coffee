@@ -22,6 +22,8 @@ angular.module 'app', ['app.controllers', 'app.services', 'ionic', 'ngCordova']
         schema       : schema
         logLevel     : 'debug'
         cachedTables : ['wallets', 'places', 'types', 'sms_matchers']
+        triggers     :
+          flows: (Db) -> Db.updateWallets()
   ]
 
 require './prepareDb'

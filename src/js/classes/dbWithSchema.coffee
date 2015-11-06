@@ -61,6 +61,8 @@ class DbWithSchema extends Db
       @snapshot tablesToReload
         .then (snapshot) =>
           _.extend @cache, snapshot
+      for table in data.tables
+        trigger @ if (trigger = @options.triggers?[table])
 
     @snapshot @options.cachedTables
       .then (snapshot) =>

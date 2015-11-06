@@ -9,6 +9,7 @@ angular.module 'app.services'
         schema: null
         logLevel: 'debug'
         cachedTables: []
+        triggers: {}
 
       $get: [
         '$cordovaSQLite'
