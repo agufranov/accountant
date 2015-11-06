@@ -5,9 +5,12 @@ class DbBase
 
     @readyQ = @$q.defer()
     @$ionicPlatform.ready =>
-      @db = @$cordovaSQLite.openDB @options.dbName
-      @db.executeSql 'PRAGMA foreign_keys = ON'
-      @readyQ.resolve()
+      try
+        @db = @$cordovaSQLite.openDB @options.dbName
+        @db.executeSql 'PRAGMA foreign_keys = ON'
+        @readyQ.resolve()
+      catch
+        @readyQ.reject()
 
   ready: (cb) ->
     @readyQ.promise.then cb
