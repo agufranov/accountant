@@ -30,7 +30,7 @@ angular.module 'app.services'
               type_id = if (matchingPlace = _.find snapshot.places, number_id: matcher.id, name: msg.place)
                 matchingPlace.type_id
               else
-                0
+                null
               if matchingWallet = _.find(snapshot.wallets, sms_name: msg.card)
                 walletId = matchingWallet.id
               sum: if msg.operation is 'cashIn' then -msg.sum else msg.sum

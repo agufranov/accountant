@@ -2,6 +2,9 @@ ion-view
   ion-content.padding
     ion-list
       ion-item.item-icon-left(ng-click='showModal()')
-        i.icon.royal(ng-class='flow_type.icon')
-        span {{flow_type.name}}
+        i.icon.royal(ng-if-start='flow_type' ng-class='flow_type.icon')
+        span(ng-if-end) {{flow_type.name}}
+        i.icon.icon-help(ng-if-start='!flow_type')
+        span(ng-if-end) N/A
+        span.item-note type_id: {{flow.type_id | str}}
     button.button.button-energized(ng-if='type_dirty' ng-click='save()') Save

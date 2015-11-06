@@ -4,7 +4,7 @@ schema =
     columns:
       id: type: 'INTEGER'
       sum: type: 'INTEGER', null: false, check: "TYPEOF(sum) = 'integer'"
-      type_id: type: 'reference', table: 'types', null: false
+      type_id: type: 'reference', table: 'types'
       date: type: 'INTEGER', null: false, default: "(strftime('%s', 'now'))"
       comment: type: 'INTEGER', null: false, default: "''"
       source_id: type: 'reference', table: 'wallets'

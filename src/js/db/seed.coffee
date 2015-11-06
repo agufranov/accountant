@@ -4,7 +4,6 @@ seedData =
     { name: 'Карта', type: 'card', balance: 0, sms_name: 'VISA2923', icon: 'ion-card balanced' }
   ]
   types: [
-    { id: 0, name: '<N/A>', icon: 'ion-help' }
     { id: 10, name: 'Питание', icon: 'ion-fork' }
       { id: 101, name: 'Кафе', icon: 'ion-pizza', parent_id: 10 }
       { id: 102, name: 'Продукты', icon: 'ion-android-cart', parent_id: 10 }
