@@ -12,15 +12,20 @@ angular.module 'app.controllers'
 
       $scope.filter = {}
 
-      Db.prepared ->
-        Db.updateWallets()
-      .then ->
-        Db.flows.select()
-      .then (flows) ->
-        $scope.flows = flows.map f
-      #
-      # $scope.addWallet = ->
-      #   Db.transaction (tx) ->
-      #     Db.flows.insert { sum: 500, type_id: 0 }, {}, tx
-      #     Db.wallets.insert { name: 'test', type: 'card', balance: 0 }, {}, tx
+      if ionic.Platform.isWebView()
+        Db.prepared ->
+          Db.updateWallets()
+        .then ->
+          Db.flows.select()
+        .then (flows) ->
+          $scope.flows = flows.map f
+      else
+        $scope.flows = [
+          {
+            sum: 50000
+            type_id: 1
+            date: Date.now()
+            source_id: 1
+          }
+        ]
   ]
