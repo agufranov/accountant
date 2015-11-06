@@ -9,10 +9,19 @@ ion-view
     ion-list
       ion-item.item-icon-left.item-icon-right(ng-repeat="flow in flows | filter:filter | orderBy:'-date'" ui-sref='app.flow({ flowId: flow.id })')
         i.icon.royal(ng-class='flow.type.icon')
-        {{flow.sum | fin}}
-        {{flow.sms_place_name}}
-        span.item-note(am-time-ago='flow.date')
+        .row(style='text-align: right')
+          .col.col-33
+            h2
+              div.assertive {{flow.sum | fin}}
+            div.royal(style='opacity: 0.7;') {{flow.type.name}}
+          .col.col-67
+            p
+              span.item-note(am-time-ago='flow.date')
+            p {{flow.sms_place_name}}
         i.icon(style='opacity: 0.4' ng-class='flow.wallet.icon')
     button.button(ui-sref='test') To test
+    button.button
+      div.icon.ion-wrench
+      div werr
   ion-nav-buttons(side='right')
     button.button.button-clear(ui-sref='app.add') Add
