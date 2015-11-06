@@ -10,6 +10,7 @@ schema =
       source_id: type: 'reference', table: 'wallets'
       dest_id: type: 'reference', table: 'wallets'
       sms_matcher_id: type: 'reference', table: 'sms_matchers'
+      sms_id: type: 'TEXT'
       sms_card_name: type: 'TEXT'
       sms_place_name: type: 'TEXT'
       sms_balance: type: 'INTEGER'

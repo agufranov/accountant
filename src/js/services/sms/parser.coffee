@@ -37,6 +37,7 @@ angular.module 'app.services'
               source_id: walletId
               type_id: type_id
               date: msg.date
+              sms_id: msg._id
               sms_matcher_id: matcher.id
               sms_card_name: msg.card
               sms_place_name: msg.place
@@ -58,12 +59,6 @@ angular.module 'app.services'
                   Db.transaction (tx) ->
                     Db.flows.insertMultiple flows, {}, tx
                     Db.sms_matchers.update { readFrom: maxMessageId + 1 }, { id: matcher.id }, tx
-                  .then ->
-                    # TODO separate from here
-                    Db.flows.select columns: ['SUM(sum) as total']
-                  .then (rows) ->
-                    console.log rows[0].total
-                    Db.wallets.update { balance: -rows[0].total }, { where: { id: 1 } }
             )
           $q.all qs
   ]
